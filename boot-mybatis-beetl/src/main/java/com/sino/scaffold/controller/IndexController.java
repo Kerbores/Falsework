@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sino.scaffold.mapper.UserMapper;
+import com.sino.scaffold.biz.UserService;
 import com.sino.scaffold.model.User;
 
 /**
@@ -17,16 +17,16 @@ import com.sino.scaffold.model.User;
 public class IndexController {
 	
 	@Autowired
-	UserMapper userMapper;
+	UserService userService;
 
 	@GetMapping("/")
-	public String indx() {
+	public String index() {
 		return "Hello sino soft!";
 	}
 	
 	@GetMapping("list")
 	public List<User> list() {
-		return userMapper.selectAll();
+		return userService.listAll();
 	}
 
 }

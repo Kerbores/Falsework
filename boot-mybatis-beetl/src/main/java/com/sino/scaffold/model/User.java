@@ -6,12 +6,14 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.sino.scaffold.model.base.BaseEntity;
+
 /**
  * @author kerbores
  *
  */
 @Table(name = "sso_user")
-public class User {
+public class User extends BaseEntity {
 
 	public static enum Status {
 		ENABLED, DISABLED
