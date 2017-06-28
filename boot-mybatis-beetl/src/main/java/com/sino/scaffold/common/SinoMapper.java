@@ -1,4 +1,4 @@
-package com.sino.scaffold.mapper;
+package com.sino.scaffold.common;
 
 import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.common.MySqlMapper;
