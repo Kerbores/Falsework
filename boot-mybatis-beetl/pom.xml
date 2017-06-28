@@ -11,6 +11,23 @@
 	<name>boot-mybatis-beetl</name>
 	<description>中科软项目脚手架spring-boot+mybatis+mapper+pagehelper+beetl版</description>
 
+	<repositories>
+		<repository>
+			<id>nutz-public</id>
+			<url>http://jfrog.nutz.cn/artifactory/jcenter</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>nutz-snapshots</id>
+			<url>https://jfrog.nutz.cn/artifactory/snapshots</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
