@@ -15,6 +15,8 @@ import com.github.pagehelper.PageHelper;
 import com.sino.scaffold.common.SinoMapper;
 import com.sino.scaffold.model.base.BaseEntity;
 
+import tk.mybatis.mapper.entity.Example;
+
 /**
  * 
  * @author kerbores
@@ -82,7 +84,7 @@ public abstract class BaseService<T extends BaseEntity> implements IBaseService<
 	}
 
 	@Override
-	public List<T> searchByExample(T example) {
+	public List<T> searchByExample(Example example) {
 		return mapper.selectByExample(example);
 	}
 
@@ -133,7 +135,7 @@ public abstract class BaseService<T extends BaseEntity> implements IBaseService<
 	 * com.sino.scaffold.model.base.BaseEntity)
 	 */
 	@Override
-	public Pager<T> listByPage(int page, int pageSize, T example) {
+	public Pager<T> listByPage(int page, int pageSize, Example example) {
 		Page<T> p = PageHelper.startPage(page, pageSize);
 		mapper.selectByExample(example);
 

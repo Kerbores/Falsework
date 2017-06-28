@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.sino.scaffold.model.base.BaseEntity;
 
+import tk.mybatis.mapper.entity.Example;
+
 /**
  * 
  * @author kerbores
@@ -28,9 +30,9 @@ public interface IBaseService<T extends BaseEntity> {
 	
 	Pager<T> listByPage(int page,int pageSize);
 	
-	Pager<T> listByPage(int page,int pageSize,T example);
+	Pager<T> listByPage(int page,int pageSize,Example example);
 
-	List<T> searchByExample(T example);
+	List<T> searchByExample(Example example);
 
 	// ============U==========
 

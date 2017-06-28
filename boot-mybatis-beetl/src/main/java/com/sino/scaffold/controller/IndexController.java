@@ -9,8 +9,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sino.scaffold.biz.UserService;
+import com.sino.scaffold.biz.base.Pager;
 import com.sino.scaffold.model.Status;
 import com.sino.scaffold.model.User;
+
+import tk.mybatis.mapper.entity.Example;
 
 /**
  * @author kerbores
@@ -45,6 +48,18 @@ public class IndexController {
 	@GetMapping("delete/{id}")
 	public int delete(@PathVariable("id") long id) {
 		return userService.deleteById(id);
+	}
+
+	@GetMapping("page/{page}")
+	public Pager<User> pagerAll(@PathVariable("page") int page) {
+		return userService.listByPage(page, 10);
+	}
+	
+	@GetMapping("search/{key}/{page}")
+	public Pager<User> pagerSearch(@PathVariable("key")String key,@PathVariable("page") int page) {
+		Example example = new Example(User.class);
+		example.createCriteria().andLike("userName", String.format("%%%s%%", key));
+		return userService.listByPage(page, 10,example);
 	}
 
 }
