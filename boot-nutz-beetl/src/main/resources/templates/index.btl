@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Beetl</title>
+</head>
+<body>
+	${test!}
+	<!--# for(u in users){ #-->
+	<p>${u.userName!}</p>
+	<!--# } #-->
+</body>
+</html>

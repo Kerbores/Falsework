@@ -88,6 +88,11 @@
 			<artifactId>nutz-plugins-spring-boot-starter</artifactId>
 			<version>1.r.62-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>com.ibeetl</groupId>
+			<artifactId>beetl</artifactId>
+			<version>2.7.19</version>
+		</dependency>
 	</dependencies>
 
 	<build>
