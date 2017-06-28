@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.ReflectUtils;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sino.scaffold.common.SinoMapper;
 import com.sino.scaffold.model.base.BaseEntity;
 
@@ -95,7 +97,7 @@ public abstract class BaseService<T extends BaseEntity> implements IBaseService<
 	}
 
 	@Override
-	public int deleteById(Integer id) {
+	public int deleteById(long id) {
 		@SuppressWarnings("unchecked")
 		T entity = (T) ReflectUtils.newInstance(klass);
 		try {
@@ -105,6 +107,41 @@ public abstract class BaseService<T extends BaseEntity> implements IBaseService<
 			e.printStackTrace();
 		}
 		return mapper.deleteByPrimaryKey(entity);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.sino.scaffold.biz.base.IBaseService#listByPage(int, int)
+	 */
+	@Override
+	public Pager<T> listByPage(int page, int pageSize) {
+		Page<T> p = PageHelper.startPage(page, pageSize);
+		mapper.selectAll();
+
+		Pager<T> pager = new Pager<>(page, pageSize);
+		pager.setData(p.getResult());
+		pager.setTotal(p.getTotal());
+
+		return pager;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.sino.scaffold.biz.base.IBaseService#listByPage(int, int,
+	 * com.sino.scaffold.model.base.BaseEntity)
+	 */
+	@Override
+	public Pager<T> listByPage(int page, int pageSize, T example) {
+		Page<T> p = PageHelper.startPage(page, pageSize);
+		mapper.selectByExample(example);
+
+		Pager<T> pager = new Pager<>(page, pageSize);
+		pager.setData(p.getResult());
+		pager.setTotal(p.getTotal());
+
+		return pager;
 	}
 
 }

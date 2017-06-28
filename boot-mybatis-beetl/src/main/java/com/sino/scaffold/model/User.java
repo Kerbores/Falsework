@@ -15,13 +15,6 @@ import com.sino.scaffold.model.base.BaseEntity;
 @Table(name = "sso_user")
 public class User extends BaseEntity {
 
-	public static enum Status {
-		ENABLED, DISABLED
-	}
-
-	public static enum SEX {
-		MALE, FEMALE
-	}
 
 	@Id
 	private long id;
@@ -48,7 +41,7 @@ public class User extends BaseEntity {
 	private Status status = Status.ENABLED;
 
 	@Column(name = "u_sex")
-	private SEX sex = SEX.MALE;
+	private Sex sex = Sex.MALE;
 
 	/**
 	 * @return the id
@@ -173,7 +166,7 @@ public class User extends BaseEntity {
 	/**
 	 * @return the sex
 	 */
-	public SEX getSex() {
+	public Sex getSex() {
 		return sex;
 	}
 
@@ -181,7 +174,7 @@ public class User extends BaseEntity {
 	 * @param sex
 	 *            the sex to set
 	 */
-	public void setSex(SEX sex) {
+	public void setSex(Sex sex) {
 		this.sex = sex;
 	}
 

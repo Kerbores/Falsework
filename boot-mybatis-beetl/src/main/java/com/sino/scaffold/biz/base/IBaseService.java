@@ -25,6 +25,10 @@ public interface IBaseService<T extends BaseEntity> {
 	T findById(Integer id);
 
 	List<T> listAll();
+	
+	Pager<T> listByPage(int page,int pageSize);
+	
+	Pager<T> listByPage(int page,int pageSize,T example);
 
 	List<T> searchByExample(T example);
 
@@ -36,6 +40,6 @@ public interface IBaseService<T extends BaseEntity> {
 
 	// ============D==========
 
-	int deleteById(Integer id);
+	int deleteById(long id);
 
 }
