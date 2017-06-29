@@ -39,7 +39,6 @@ public abstract class BaseService<T extends BaseEntity> implements IBaseService<
 	@PostConstruct
 	private void init() {
 		ParameterizedType parameterizedType = (ParameterizedType) this.getClass().getGenericSuperclass();
-		@SuppressWarnings("unchecked")
 		Class<T> entityClass = (Class<T>) (parameterizedType.getActualTypeArguments()[0]);
 		this.klass = entityClass;
 		for (Field field : klass.getFields()) {
@@ -67,7 +66,6 @@ public abstract class BaseService<T extends BaseEntity> implements IBaseService<
 
 	@Override
 	public T findById(Integer id) {
-		@SuppressWarnings("unchecked")
 		T entity = (T) ReflectUtils.newInstance(klass);
 		try {
 			idField.setAccessible(true);
@@ -100,7 +98,6 @@ public abstract class BaseService<T extends BaseEntity> implements IBaseService<
 
 	@Override
 	public int deleteById(long id) {
-		@SuppressWarnings("unchecked")
 		T entity = (T) ReflectUtils.newInstance(klass);
 		try {
 			idField.setAccessible(true);
