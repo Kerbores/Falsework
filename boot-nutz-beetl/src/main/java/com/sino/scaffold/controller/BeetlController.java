@@ -37,7 +37,6 @@ public class BeetlController {
 	public String layout(Model model) {
 		model.addAttribute("obj", NutMap.NEW().addv("i", 1).addv("d", Times.now()));
 		model.addAttribute("users", userService.queryAll());
-		model.addAttribute("base", request.getServletContext().getContextPath());
 		return "pages/test.html";
 	}
 
