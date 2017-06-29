@@ -51,7 +51,7 @@ public class IndexController {
 
 	@GetMapping("page/{page}")
 	public Page<User> pagerAll(@PathVariable("page") int page) {
-		return userService.selectPage(new Page<>(page, 10));
+		return userService.selectPage(new Page<User>(page, 10));
 	}
 	
 	@GetMapping("search/{key}/{page}")
