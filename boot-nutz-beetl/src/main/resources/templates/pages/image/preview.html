@@ -1,0 +1,59 @@
+<!--# layout("/layout/blank.html"){ #-->
+<style>
+<!--
+#footer {
+	position: fixed;
+	bottom: 0;
+	background: #000;
+	width: 100%;
+	z-index: 9999;
+	opacity: .80;
+	filter: alpha(opacity = 80);
+}
+-->
+</style>
+文件批次号: ${obj.data.uuid !}
+<ul class="list-group">
+	<!--# for(data in obj.data.images){ #-->
+	<li class="list-group-item" data-typed='${data.typed!}'><img src="${data.picPath!}" width="96%" style="margin-left: 2%" title="SHIFT + 鼠标滚动 调整大小"></li>
+	<!--# }  #-->
+</ul>
+<div id="footer">
+	<button type="button" id='done' class="pull-right btn btn-default" onclick="writeDone(this)" data-id='${obj.data.uuid !}'>
+		<i class="fa fa-save"></i> 录入完成
+	</button>
+	<button class="btn btn-default pull-right" onclick="closeP()">
+		<i class="fa fa-undo"></i> 关闭预览
+	</button>
+</div>
+<script type="text/javascript" src="${base!}/assets/addon/jquery.mousewheel.min.js"></script>
+<script type="text/javascript">
+	$(function() {
+		if ($($('.list-group-item')[0]).data('typed')) {
+			$("#done").hide();
+		}
+	})
+	function closeP() {
+		parent.layer.closeAll();
+	}
+	function writeDone(dom) {
+		var uuid = $(dom).data('id');
+		$.post(Common.getRootPath() + "/image/typed", {
+			uuid : uuid
+		}, function(result) {
+			if (result.operationState == 'SUCCESS') {
+				parent.location.reload(true);
+			} else {
+				Common.showMessage(result.data.reason);
+			}
+		}, 'json');
+	}
+	$(function() {
+		$('img').mousewheel(function(event, delta, deltaX, deltaY) {
+			if (event.shiftKey) {
+				$(this).width($(this).width() * (1 + delta / 10));
+			}
+		});
+	})
+</script>
+<!--# }  #-->

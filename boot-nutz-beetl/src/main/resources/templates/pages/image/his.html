@@ -1,0 +1,70 @@
+<!--# 
+layout("/layout/default.html",{"menu":["image","image_his"],"breadcrumbs":[{"name":"历史资料"}]}){ 
+ #-->
+<table class="table table-striped table-bordered table-hover">
+	<thead>
+		<tr>
+			<th colspan="8">
+				<div class="row">
+					<div class="col-md-3 ">
+						<form action="${base!}/image/hisSearch" class="search-form">
+							<div class="input-group">
+								<span class="input-group-addon"> 关键词 </span> <input class="form-control search-query" type="text" name="key" value="${obj.data.key!}" data-type="reg" data-reg="/^[\u4e00-\u9fa5\d\w ]{1,}$/"
+									data-default="Search..." data-error="请输入搜索关键词" placeholder="请输入批次号(二维码)检索"> <span class="input-group-addon btn-purple search-btn" id="queryInfo"
+									style="cursor:pointer ;"> <i class="fa fa-search"></i> GO
+								</span>
+							</div>
+						</form>
+					</div>
+					<div class="col-md-2 col-md-offset-7">
+						<a class="btn btn-sm btn-primary pull-right" href='${base!}/image/gather' style="margin-right:45px"> <i class="fa fa-plus"></i> 资料采集
+						</a>
+					</div>
+				</div>
+			</th>
+		</tr>
+		<tr class="center">
+			<th>ID</th>
+			<th>资料类型</th>
+			<th>批次号</th>
+			<th>上传时间</th>
+			<th>采集人</th>
+			<th>录入人</th>
+			<th>资料数</th>
+			<th>操作</th>
+		</tr>
+	</thead>
+
+	<tbody>
+	<!--# for(data in obj.data.pager.entities){  #-->
+		<tr>
+			<td class="center">${data.id!}</td>
+			<td>${data.m_type.name!}</td>
+			<td>${data.m_uuid!}</td>
+			<td>${data.m_pload_time,"yyyy年MM月dd日 HH:mm:ss"}</td>
+			<td>${data.u_real_name!}</td>
+			<td>${data.typer!}</td>
+			<td>${data.pic_count!}</td>
+			<td class="center">
+				<button class="btn btn-xs btn-purple btn-pop" data-url='/image/preview/${data.m_uuid!}' data-width='1000' data-height='700' data-title=' 资料预览' data-btn='false'>
+					<i class="ace-icon fa fa-picture-o bigger-120"></i>查看图片
+				</button>
+			</td>
+		</tr>
+		<!--# }  #-->
+	</tbody>
+	<tfoot>
+		<!--#if(obj.data.pager.count == 0){  #-->
+		<tr>
+			<td colspan="16" class="null-pager">没有符合条件的数据</td>
+		</tr>
+		<!--# }else{ #-->
+		<tr>
+			<td colspan="16">
+				<div class="pull-right">${obj.data.pager.pagerBar!}</div>
+			</td>
+		</tr>
+		<!--# }#-->
+	</tfoot>
+</table>
+<!--# }  #-->

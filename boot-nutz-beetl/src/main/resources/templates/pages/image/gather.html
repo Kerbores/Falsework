@@ -1,0 +1,571 @@
+<!--# 
+layout("/layout/default.html",{"menu":["image","image_gather"],"breadcrumbs":[{"name":"图像采集"}]}){ 
+ #-->
+<link href="${base!}/assets/metronic/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
+<script src="${base!}/assets/metronic/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+<style type="text/css">
+<!--
+.switchery {
+	background-color: #fff;
+	border: 1px solid #dfdfdf;
+	border-radius: 20px;
+	cursor: pointer;
+	display: inline-block;
+	height: 30px;
+	position: relative;
+	vertical-align: middle;
+	width: 50px;
+}
+
+.switchery>small {
+	background: #fff;
+	border-radius: 100%;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+	height: 27px;
+	position: absolute;
+	top: 0;
+	width: 27px;
+}
+
+.panel-body>img {
+	margin: 15px;
+	cursor: pointer;
+}
+
+.btn-close {
+	margin-left: -30px;
+	margin-top: -30px;
+	opacity: 0.85;
+	padding: 0 2px 0 2px;
+	border-radius: 0
+}
+-->
+</style>
+<!--#  if(obj.data.errors != null  && obj.data.errors.~size > 0){  #-->
+<ul class="list-group">
+	<!--# for( error in obj.data.errors){ #-->
+	<li class="list-group-item list-group-item-warning">${error.value!}</li>
+	<!--# } #-->
+</ul>
+<!--# }else{ #-->
+<div class="row">
+	<div class="col-md-5">
+		<div class="panel">
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-4">
+						<div class="input-group">
+							<span class="input-group-addon"> <i class="ace-icon fa fa-qrcode"></i> 二维码
+							</span> <input class="form-control"  type="text" id="qrcode" readonly="readonly">
+						</div>
+					</div>
+					<div class="col-md-8">
+						<a href="${base!}/assets/ocx/setup.exe" class="btn  btn-info pull-right"> 下载控件 <i class="fa fa-cloud-download"></i>
+						</a>	
+						<button id="upload_pic" class="btn  btn-info pull-right">
+							上传图片 <i class="fa fa-cloud-upload"></i>
+						</button>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-12 hide" id="finance">
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<h3 class="panel-title">凭证单位信息</h3>
+							</div>
+							<div class="panel-body">
+								<ul class="p-info">
+									<li>
+										<div class="title">分公司</div>
+										<div class="desk" id="branch">总公司</div>
+									</li>
+									<li>
+										<div class="title">部门</div>
+										<div class="desk" id="dept">未设定部门</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12 hide" id="idcard">
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<h3 class="panel-title">身份证信息</h3>
+							</div>
+							<div class="panel-body">
+								<form class="form-horizontal" role="form">
+
+									<div class="form-group">
+										<label class="col-lg-2 col-sm-2 control-label">姓名</label>
+										<div class="col-lg-10">
+											<input type="text" class="form-control" id="idcard_name" placeholder="请填入姓名">
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-lg-2 col-sm-2 control-label">性别</label>
+										<div class="col-lg-10">
+											<input type="text" class="form-control" id="idcard_sex" placeholder="请填入性别">
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-lg-2 col-sm-2 control-label">民族</label>
+										<div class="col-lg-10">
+											<input type="text" class="form-control" id="idcard_volk" placeholder="请填入民族">
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-lg-2 col-sm-2 control-label">出生年月</label>
+										<div class="col-lg-10">
+											<input type="text" class="form-control" id="idcard_birth" placeholder="请填入出生年月">
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-lg-2 col-sm-2 control-label">地址</label>
+										<div class="col-lg-10">
+											<input type="text" class="form-control" id="idcard_address" placeholder="请填入住址">
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-lg-2 col-sm-2 control-label">身份证号</label>
+										<div class="col-lg-10">
+											<input type="text" class="form-control" id="idcard_id" placeholder="请填入身份证号">
+										</div>
+									</div>
+
+								</form>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-12 hide" id="pic">
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<h3 class="panel-title">图片缓存区</h3>
+							</div>
+							<div class="panel-body"></div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<div class="col-md-7">
+		<div class="panel">
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-8">
+						<button id="get_pic" class="btn  btn-primary">
+							获取图片 <i class="fa fa-picture-o"></i>
+						</button>
+						<button id="setting" class="btn  btn-primary">
+							镜头参数 <i class="fa fa-camera"></i>
+						</button>
+						<button id="image_setting" class="btn  btn-primary">
+							图像设置 <i class="fa fa-gear"></i>
+						</button>
+						<!-- <button id="rote" class="btn  btn-primary">
+							图像旋转 <i class="fa fa-rotate-right"></i>
+						</button> -->
+						<button id="recycle" class="btn  btn-primary">
+							清空缓存 <i class="fa fa-trash-o"></i>
+						</button>
+					</div>
+					<div class="col-md-2">
+						<select id="docType" class="form-control">
+							<!--# for(type in obj.data.types){  #-->
+							<option value="${type!}" ${type==obj.data.type?"selected" : ""} >${type.name!}</option>
+							<!--# } #-->
+						</select>
+					</div>
+					<div class="col-md-2">
+						<input type="checkbox" class="make-switch" id="switcher" data-on-color="primary" data-off-color=danger data-on-text="开启" data-off-text="关闭">
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div style="text-align: center;" id="oxc-captrue">
+					<object classid="clsid:454C18E2-8B7D-43C6-8C17-B1825B49D7DE" id="captrue" width="96%" codebase='${obj.data.oxcSource}'></object>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<div class="input-group">
+						<span class="input-group-addon btn-info"> 亮度 </span> <select class="form-control" onchange="setBrightness(this)">
+							<option>请选择亮度</option>
+							<optgroup label="-------------------">
+								<!--# for(i in obj.data.numbers){  #-->
+								<option ${i==20?"selected":""} >${i!}</option>
+								<!--# }  #-->
+							</optgroup>
+						</select>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="input-group">
+						<span class="input-group-addon btn-info"> 对比度 </span> <select class="form-control" onchange="setContrast(this)">
+							<option>请选择对比度</option>
+							<optgroup label="-------------------">
+								<!--# for(i in obj.data.numbers){  #-->
+								<option ${i==20?"selected":""} >${i!}</option>
+								<!--# }  #-->
+							</optgroup>
+						</select>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="input-group">
+						<span class="input-group-addon btn-info"> 曝光度 </span> <select class="form-control" onchange="setExposure(this)">
+							<option>请选择曝光度</option>
+							<optgroup label="-------------------">
+								<!--# for(i in obj.data.numbers){  #-->
+								<option ${i==50?"selected":""} >${i!}</option>
+								<!--# }  #-->
+							</optgroup>
+						</select>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--# } #-->
+<script>
+	var uu16 = '${obj.data.uuid!}';
+	$(function() {
+		$("#captrue").height($("#captrue").width() * 0.75);
+		setTimeout(function() {
+			if (captrue) { //如果加载过oxc自动启动摄像头
+				captrue.vSetResolution(5); 
+				captrue.bStopPlay();
+				if (captrue.bStartPlay()) {
+					$(".make-switch")[0].click();
+					$("#switcher").on('switchChange.bootstrapSwitch', function(e, data) {
+						if (data) {
+							Common.showMessage("正在打开摄像头...");
+							captrue.vSetResolution(5); 
+							captrue.bStopPlay();
+							captrue.bStartPlay();
+						} else {
+							Common.showMessage("正在关闭摄像头...");
+							captrue.bStopPlay();
+						}
+					});
+				}
+				defaultSetting();
+			}
+		}, 1000);
+
+		//旋转功能
+		/* $("#rote").on('click', function() {
+			if (captureOn()) {
+				if ($(this).text().indexOf('旋转') >= 0) {
+					$(this).html('恢复图像 <i class="fa fa-rotate-right"></i>');
+					captrue.bStopPlay();
+					captrue.bStartPlayRotate(270);
+				} else {
+					$(this).html('图像旋转 <i class="fa fa-rotate-right"></i>');
+					captrue.bStopPlay();
+					captrue.bStartPlay()
+				}
+				defaultSetting();
+			} else {
+				Common.showMessage("摄像头未开启");
+			}
+		}); */
+		//图像设置
+		$("#image_setting").on('click', function() {
+			if (captureOn()) {
+				captrue.displayVideoPara();
+			} else {
+				Common.showMessage("摄像头未开启");
+			}
+		});
+		$("#setting").on('click', function() {
+			if (captureOn()) {
+				captrue.vSetCapturePin();
+				captrue.bStartPlay();
+			} else {
+				Common.showMessage("摄像头未开启");
+			}
+		});
+
+		$("#get_pic").on('click', getPic);
+		//上传图片
+		$('#upload_pic').on(
+			'click',
+			function() {
+				var qrcode = $('#qrcode').val();
+				var docType = $('#docType').val();
+				var deviceId = captrue.sGetDevicesId();
+				var uploadData = {
+					qrcode : qrcode,
+					docType : docType,
+					deviceId : deviceId
+				}
+				var dataArray = []; //声明一个空的数组来存图片
+				if (!qrcode && 'FINANCE' == docType) {
+					Common.validationFail("二维码识别失败,请输入二维码信息", $('#qrcode'));
+					return;
+				}
+				if ('IDCARD' == docType) {
+					var idcard = {
+						id : $("#idcard_id").val(),
+						name : $("#idcard_name").val(),
+						sex : $("#idcard_sex").val() == '男' ? 'MALE'
+							: 'FEMALE',
+						volk : $("#idcard_volk").val(),
+						birthDay : $("#idcard_birth").val(),
+						address : $("#idcard_address").val()
+					}
+					uploadData.card = JSON.stringify(idcard);
+				}
+				$('#pic').find('img').each(function(i, item) {
+					var dataItem = {
+						url : $(item).attr('src'),
+						path : $(item).data('path'),
+						key : $(item).data('key')
+					}
+					dataArray.push(dataItem);
+				});
+				uploadData['dataArray'] = JSON.stringify(dataArray);
+				$('#oxc-captrue').hide(); //显示信息之前隐藏控件
+				var index = layer.msg("正在上传...", {
+					icon : 4,
+					time : 10 * 1000
+				});
+				$.post(Common.getRootPath() + '/image/upload', uploadData,
+					function(result) {
+						layer.close(index);
+						if (result.operationState == 'SUCCESS') {
+							Common.showMessage("上传成功!");
+							setTimeout(function() {
+								location.reload();
+							}, 3000);
+						} else {
+							Common.showMessage(result.data.reason);
+						}
+					}, 'json').complete(function() {
+					$('#oxc-captrue').show(); //显示控件
+				});
+			});
+	})
+
+	function getPic() {
+		if (captureOn()) {
+			$('#oxc-captrue').hide();
+			var index = layer.msg("正在拍摄,请稍候...", {
+				icon : 4,
+				time : 10 * 1000
+			});
+			var base64 = 'data:image/jpeg;base64,' + captrue.sGetBase64();
+			var qrcode = captrue.sGetBarCodeOnline();
+			var type = $('#docType').val();
+			//先让用户预览一下
+			layer.close(index);
+			layer.open({
+				title : "图片预览",
+				type : 1,
+				skin : 'layui-layer-rim', //加上边框
+				area : [ '1000px', '750px' ], //宽高
+				closeBtn : false, //不显示关闭按钮
+				shift : 2,
+				shadeClose : false, //开启遮罩关闭
+				content : '<div style="text-align: center;"><img  src="' + base64 + '" width="800" height="600"><input type="hidden" id="qrcode" value="' + qrcode + '"></div>',
+				end : function() { //销毁的时候将OXC控件显示出来
+					$('#oxc-captrue').show();
+				},
+				btn : [ '确认', '取消' ],
+				yes : function(index, layero) { //或者使用btn1
+					$('#docType')[0].disabled = true; //禁用框框,防止脏数
+					switch (type) {
+					case 'DOC':
+						//文档
+						break;
+					case 'IDCARD':
+						//身份证
+						dealIDCard(base64);
+						break;
+
+					default:
+						//财务
+						dealFinance(qrcode, base64, layero);
+						break;
+					}
+					//TODO 先上传
+					$.post(Common.getRootPath() + "/image/upload2Qiniu", {
+						base64 : base64,
+						uuid : uu16
+					}, function(result) {
+						if (result.operationState == 'SUCCESS') {
+							$('#pic').removeClass('hide');
+							$('#pic').find('.panel-body')
+								.append('<img data-path="' + result.data.path + '" data-key="' + result.data.key + '" src="' + result.data.url + '" width="80px" onclick="showPic(this)"><button type="button" class="btn btn-xm btn-close" onclick="removePic(this)" title="点击删除图片"><span aria-hidden="true">&times;</span></button>')
+							layer.closeAll();
+						} else {
+							Common.showMessage(result.data.reason);
+						}
+					}, 'json');
+
+				},
+				cancel : function(index) { //或者使用btn2
+				}
+			});
+		} else {
+			Common.showMessage("摄像头未开启");
+		}
+	}
+
+	function removePic(dom) {
+		$('#oxc-captrue').hide();
+		layer.confirm('确认删除这张图片 ?', {
+			icon : 3,
+			title : '删除提示'
+		}, function(index) {
+			$(dom).prev().remove();
+			$(dom).remove();
+			$('#oxc-captrue').show();
+			layer.close(index);
+		}, function(index) {
+			$('#oxc-captrue').show();
+			layer.close(index);
+		});
+	}
+
+	function dealIDCard(base64) {
+		if ($('#idcard').hasClass('hide')) {
+			//data:image/jpeg;base64,
+			$.post(Common.getRootPath() + "/image/baiduOcr", {
+				img : base64.substr(23)
+			}, function(result) {
+				if (result.operationState == 'SUCCESS') {
+					$('#idcard_name').val(result.data.card.name);
+					$('#idcard_sex').val(
+						result.data.card.sex == 'MALE' ? '男' : '女');
+					$('#idcard_volk').val(result.data.card.volk);
+					$('#idcard_birth').val(result.data.card.birthDay);
+					$('#idcard_address').val(result.data.card.address);
+					$('#idcard_id').val(result.data.card.id);
+					$('#idcard').removeClass('hide');
+				} else {
+					Common.showMessage(result.data.reason);
+				}
+			}, 'json')
+		}
+	}
+
+	function showPic(dom) {
+		$('#oxc-captrue').hide();
+		layer.open({
+			title : "图片预览",
+			type : 1,
+			skin : 'layui-layer-rim', //加上边框
+			area : [ '1000px', '750px' ], //宽高
+			closeBtn : false, //不显示关闭按钮
+			shift : 2,
+			shadeClose : true, //开启遮罩关闭
+			content : '<div style="text-align: center;"><img  src="'
+				+ $(dom).attr('src')
+				+ '" width="800" height="600"><input type="hidden" id="qrcode" value="' + qrcode + '"></div>',
+			end : function() { //销毁的时候将OXC控件显示出来
+				$('#oxc-captrue').show();
+			},
+			btn : [ '关闭' ],
+			yes : function(index) {
+				layer.close(index);
+			}
+		});
+	}
+	//财务图片的处理
+	function dealFinance(qrcode, base64, layero) {
+		//1.根据二维码查询组织机构并显示
+		//2.将图片放到左侧
+		if($('#qrcode').val()){
+			return;
+		}
+		if (qrcode && $('#finance').hasClass('hide')) {
+			console.log(qrcode);
+			//qrcode = qrcode.substring(0, 1) == '-' ? qrcode.substring(1) : qrcode;
+			$.post(Common.getRootPath() + '/image/queryDept', {
+				qrcode : qrcode
+			}, function(result) {
+				if (result.operationState == 'SUCCESS') {
+					$('#qrcode').val(qrcode);
+					$('#branch').text(result.data.branch.name);
+					//$('#dept').text(result.data.dept.name);
+					$('#finance').removeClass('hide');
+				} else {
+					Common.showMessage(result.data.reason);
+				}
+			}, 'json');
+		}
+	}
+
+	//设置亮度
+	function setBrightness(dom) {
+		captrue.vSetBrightness($(dom).val());
+	}
+	//设置对比度
+	function setContrast(dom) {
+		captrue.vSetContrast($(dom).val());
+	}
+	//设置曝光度
+	function setExposure(dom) {
+		captrue.vSetExposure($(dom).val());
+	}
+
+	function preview(selector) {
+		$('#oxc-captrue').hide();
+		layer.photos({
+			photos : {
+				"start" : 0, //初始显示的图片序号，默认0
+				"data" : [ //相册包含的图片，数组格式
+					{
+						"alt" : "预览",
+						"src" : $('#' + selector).attr('src'), //原图地址
+					} ]
+			},
+			end : function() { //销毁的时候将OXC控件显示出来
+				$('#oxc-captrue').show();
+			}
+		});
+	}
+
+	function discriminate(dom) {
+		var img = $(dom).parent().prev().find('img')
+		$.post(Common.getRootPath() + '/image/discriminate', {
+			data : img.attr('src')
+		}, function(result) {
+			if (result.operationState == 'SUCCESS') {
+				$('#qrcode').val(result.data.code);
+			} else {
+				Common.showMessage(result.data.reason);
+			}
+		}, 'json');
+	}
+
+	function deleteImage(dom) {
+		var previewBlock = $(dom).parent().parent();
+		var blankBlock = previewBlock.next();
+		previewBlock.remove();
+		blankBlock.remove();
+	}
+
+	function captureOn() {
+		return $(".make-switch")[0].checked;
+	}
+
+	function defaultSetting() {
+		captrue.vSetDelHBFlag(1); //默认设置切边
+		captrue.bSetMode(3) //设置自动裁剪模式
+		captrue.vSetImageQuality(90)
+		captrue.vSetResolution(1) //设置分辨率
+	}
+</script>
+<!--#  } #-->

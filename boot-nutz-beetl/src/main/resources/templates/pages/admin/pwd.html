@@ -1,0 +1,34 @@
+<!--#  layout("/layout/blank.html",{}){  #-->
+<div class="row">
+	<div class="col-xs-10 col-xs-offset-1">
+		<form id="changePwdForm" class="cmxform form-horizontal adminex-form" novalidate="novalidate">
+			<div class="form-group ">
+				<label for="用户名" class="control-label col-lg-3">旧密码 : </label>
+				<div class="col-lg-9">
+					<input class="form-control" type="password" placeholder="请输入旧密码" id="old" name="old" data-type='password' data-error='旧密码不符合规范' />
+				</div>
+			</div>
+			<div class="form-group ">
+				<label class="control-label col-lg-3"> 新密码 : </label>
+				<div class="col-lg-9">
+					<input class="form-control" type="password" placeholder="请输入新密码" id="new" name="new" data-type='password' data-error='新密码不符合规范'>
+				</div>
+			</div>
+
+			<div class="form-group ">
+				<label class="control-label col-lg-3"> 确认新密码 : </label>
+				<div class="col-lg-9">
+					<input class="form-control" type="password" placeholder="请确认新密码" id="confirm" name="confirm" data-type='password' data-error='确认密码不符合规范'>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<script type="text/javascript">
+<!--
+	function showMsg(msg,callback){
+		layer.msg(msg,callback);
+	}
+//-->
+</script>
+<!--# } #-->

@@ -1,5 +1,9 @@
 package com.sino.scaffold.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.nutz.lang.Times;
+import org.nutz.lang.util.NutMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +21,9 @@ import com.sino.scaffold.service.UserService;
 public class BeetlController {
 	
 	@Autowired
+	HttpServletRequest request;
+	
+	@Autowired
 	UserService userService;
 
 	@GetMapping("/")
@@ -24,6 +31,14 @@ public class BeetlController {
 		model.addAttribute("test", "Hello Beetl");
 		model.addAttribute("users", userService.queryAll());
 		return "index.btl";
+	}
+	
+	@GetMapping("/layout")
+	public String layout(Model model) {
+		model.addAttribute("obj", NutMap.NEW().addv("i", 1).addv("d", Times.now()));
+		model.addAttribute("users", userService.queryAll());
+		model.addAttribute("base", request.getServletContext().getContextPath());
+		return "pages/test.html";
 	}
 
 }
