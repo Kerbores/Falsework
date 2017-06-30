@@ -47,6 +47,7 @@ public class BeetlController extends BaseController {
 			data = Lang.map(DES.decrypt(cookie));
 		}
 		model.addAttribute("loginInfo", data);
+		model.addAttribute("title", "系统登录");
 		return "pages/login/login.html";
 	}
 
