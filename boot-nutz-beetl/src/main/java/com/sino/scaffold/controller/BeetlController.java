@@ -30,7 +30,7 @@ public class BeetlController {
 	public String index(Model model) {
 		model.addAttribute("test", "Hello Beetl");
 		model.addAttribute("users", userService.queryAll());
-		return "index.btl";
+		return "pages/login/login.html";
 	}
 	
 	@GetMapping("/layout")
