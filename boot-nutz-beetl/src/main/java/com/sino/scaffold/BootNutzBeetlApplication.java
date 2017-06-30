@@ -35,17 +35,25 @@ public class BootNutzBeetlApplication {
 
 	@Bean
 	public Docket api() {
-		return new Docket(DocumentationType.SWAGGER_2).genericModelSubstitutes(DeferredResult.class)
-				.useDefaultResponseMessages(false).forCodeGeneration(true).pathMapping("/").select()
-				.apis(RequestHandlerSelectors.basePackage("com.sino")).build().apiInfo(apiInfo());
+		return new Docket(DocumentationType.SWAGGER_2)
+				.genericModelSubstitutes(DeferredResult.class)
+				.useDefaultResponseMessages(false)
+				.forCodeGeneration(true)
+				.pathMapping("/")
+				.select()
+				.apis(RequestHandlerSelectors.basePackage("com.sino"))
+				.build()
+				.apiInfo(apiInfo());
 	}
 
 	private ApiInfo apiInfo() {
-		return new ApiInfoBuilder().title("F").description("接口手册")// 详细描述
+		return new ApiInfoBuilder().title("F")
+				.description("接口手册")// 详细描述
 				.version("1.0")// 版本
 				.termsOfServiceUrl("http://www.sinosoft.com.cn")
 				.contact(new Contact("王贵源", "http://www.sinosoft.com.cn", "wangguiyuan@sinosoft.com.cn"))// 作者
 				.license("The Apache License, Version 2.0")
-				.licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html").build();
+				.licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
+				.build();
 	}
 }
