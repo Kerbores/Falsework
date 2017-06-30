@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.sino.scaffold.BootNutzBeetlApplication;
+import com.sino.scaffold.bean.InstalledRole;
 import com.sino.scaffold.bean.acl.User;
 import com.sino.scaffold.controller.base.BaseController;
+import com.sino.scaffold.ext.shiro.anno.SINORequiresRoles;
 import com.sino.scaffold.service.acl.UserService;
 import com.sino.scaffold.utils.DES;
 
@@ -52,6 +54,7 @@ public class BeetlController extends BaseController {
 	}
 
 	@GetMapping("dashboard")
+	@SINORequiresRoles(InstalledRole.SU)
 	public String dashboard() {
 		return "pages/dashboard.html";
 	}

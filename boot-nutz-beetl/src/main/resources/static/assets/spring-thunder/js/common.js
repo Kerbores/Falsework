@@ -123,7 +123,7 @@ var Common = {
 		})
 	},
 	logout : function() {
-		location.href = Common.getRootPath() + '/system/logout'
+		location.href = Common.getRootPath() + '/user/logout'
 	},
 	getRootPath : function() {
 		return contextPath;

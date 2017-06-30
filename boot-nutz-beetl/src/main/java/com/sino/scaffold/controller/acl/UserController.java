@@ -7,11 +7,12 @@ import org.nutz.json.Json;
 import org.nutz.lang.Strings;
 import org.nutz.lang.util.NutMap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sino.scaffold.BootNutzBeetlApplication;
 import com.sino.scaffold.bean.InstalledRole;
@@ -25,7 +26,7 @@ import com.sino.scaffold.utils.Result;
  * @author kerbores
  *
  */
-@RestController
+@Controller
 @RequestMapping("user")
 public class UserController extends BaseController {
 
@@ -33,6 +34,7 @@ public class UserController extends BaseController {
 	ShiroUserService shiroUserService;
 
 	@PostMapping("login")
+	@ResponseBody
 	public Result login(@RequestParam("user") String user, @RequestParam("password") String password, @RequestParam("captcha") String captcha,
 			@RequestParam("rememberMe") boolean rememberMe, HttpSession session) {
 		if (Strings.equalsIgnoreCase(captcha, session.getAttribute(BootNutzBeetlApplication.CAPTCHA_KEY).toString())) {
@@ -55,9 +57,9 @@ public class UserController extends BaseController {
 	}
 
 	@GetMapping("logout")
-	public Result logout() {
+	public String logout() {
 		SecurityUtils.getSubject().logout();
-		return Result.success();
+		return "redirect:/";
 	}
 
 	@GetMapping("shiro")
