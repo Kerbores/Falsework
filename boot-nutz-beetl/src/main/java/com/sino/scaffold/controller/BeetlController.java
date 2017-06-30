@@ -39,7 +39,7 @@ public class BeetlController extends BaseController {
 	@RequestMapping("/")
 	public String home(Model model, @SessionAttribute(name = BootNutzBeetlApplication.USER_KEY, required = false) User user) {
 		if (user != null) {
-			return "redirect:/system/main";
+			return "redirect:/dashboard";
 		}
 		String cookie = _getCookie(BootNutzBeetlApplication.USER_COOKIE_KEY);
 		NutMap data = NutMap.NEW();
@@ -49,6 +49,11 @@ public class BeetlController extends BaseController {
 		model.addAttribute("loginInfo", data);
 		model.addAttribute("title", "系统登录");
 		return "pages/login/login.html";
+	}
+
+	@GetMapping("dashboard")
+	public String dashboard() {
+		return "pages/dashboard.html";
 	}
 
 	@GetMapping("/layout")

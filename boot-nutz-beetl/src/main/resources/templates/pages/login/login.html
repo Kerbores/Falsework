@@ -190,7 +190,7 @@
 					}, function(result) {
 						if (result.operationState == 'SUCCESS') {
 							//TODO 跳转到系统主界面
-							location.href = '${request.servletContext.contextPath}/system/main'
+							location.href = '${request.servletContext.contextPath}/dashboard'
 						} else {
 							LOGIN.refreshCaptcha();
 							Common.validationFail(result.data.reason, $('#login-btn'));
