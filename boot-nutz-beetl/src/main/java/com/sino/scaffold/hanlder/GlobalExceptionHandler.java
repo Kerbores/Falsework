@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sino.scaffold.OperationState;
-import com.sino.scaffold.Result;
+import com.sino.scaffold.utils.OperationState;
+import com.sino.scaffold.utils.Result;
 
 @RestController
 @ControllerAdvice

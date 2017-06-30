@@ -182,7 +182,7 @@
 			},
 			doLogin : function() { //登录
 				if ($('.login-form').validation()) {
-					$.post(Common.getRootPath() + '/system/login', {
+					$.post(Common.getRootPath() + '/user/login', {
 						user : $('#user').val(),
 						password : $('#password').val(),
 						captcha : $('#captcha').val(),

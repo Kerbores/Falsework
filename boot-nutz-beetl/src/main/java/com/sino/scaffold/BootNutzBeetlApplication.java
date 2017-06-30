@@ -25,6 +25,10 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class BootNutzBeetlApplication {
 
+	public static final String CAPTCHA_KEY = "SINO_CAPTCHA";
+	public static final String USER_KEY = "SINO_USER_KEY";
+	public static final String USER_COOKIE_KEY = "SINO_USER_COOKIE";
+
 	public static void main(String[] args) {
 		SpringApplication.run(BootNutzBeetlApplication.class, args);
 	}

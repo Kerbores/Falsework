@@ -12,10 +12,10 @@ import org.nutz.plugin.spring.boot.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sino.scaffold.Result;
 import com.sino.scaffold.bean.acl.User;
 import com.sino.scaffold.bean.acl.UserPermission;
 import com.sino.scaffold.bean.acl.UserRole;
+import com.sino.scaffold.utils.Result;
 
 /**
  * 

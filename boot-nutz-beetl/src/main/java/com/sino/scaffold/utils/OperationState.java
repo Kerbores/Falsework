@@ -1,4 +1,4 @@
-package com.sino.scaffold;
+package com.sino.scaffold.utils;
 
 /**
  * @author kerbores

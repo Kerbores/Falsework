@@ -11,9 +11,9 @@ import org.nutz.plugin.spring.boot.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sino.scaffold.Result;
 import com.sino.scaffold.bean.acl.Role;
 import com.sino.scaffold.bean.acl.RolePermission;
+import com.sino.scaffold.utils.Result;
 
 /**
  * 

@@ -18,11 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
-import com.sino.scaffold.Result;
 import com.sino.scaffold.bean.acl.Permission;
 import com.sino.scaffold.bean.acl.Role;
 import com.sino.scaffold.bean.acl.User;
 import com.sino.scaffold.bean.acl.User.Type;
+import com.sino.scaffold.utils.Result;
 
 /**
  * 

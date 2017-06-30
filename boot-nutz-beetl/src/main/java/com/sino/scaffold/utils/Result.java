@@ -1,4 +1,4 @@
-package com.sino.scaffold;
+package com.sino.scaffold.utils;
 
 import java.util.Iterator;
 import java.util.Map;
