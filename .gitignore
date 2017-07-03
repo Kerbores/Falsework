@@ -14,3 +14,7 @@ target/
 .settings/
 .classpath
 .project
+
+.gitkeep
+.vscode-upload.json
+
