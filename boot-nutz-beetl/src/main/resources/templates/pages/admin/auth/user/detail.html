@@ -1,7 +1,7 @@
 <!--# 
 layout("/layout/default.html",{"menu":["acl","user_admin"],"breadcrumbs":[{"name":"用户列表",url:"user/list"},{"name":"用户详情"}]}){ 
  #-->
-<link href="${base!}/assets/metronic/pages/css/profile.min.css" rel="stylesheet" type="text/css" />
+<link href="${ctxPath!}/assets/metronic/pages/css/profile.min.css" rel="stylesheet" type="text/css" />
 
 <div class="row">
 	<div class="panel panel-info">
@@ -17,7 +17,7 @@ layout("/layout/default.html",{"menu":["acl","user_admin"],"breadcrumbs":[{"name
 						<div class="portlet light profile-sidebar-portlet ">
 							<!-- SIDEBAR USERPIC -->
 							<div class="profile-userpic">
-								<img src="${null != obj.data.user.headKey! ? obj.data.user.headKey! : base + '/assets/metronic/pages/media/profile/profile_user.jpg'}" class="img-responsive" alt="">
+								<img src="${null != obj.data.user.headKey! ? obj.data.user.headKey! : ctxPath + '/assets/metronic/pages/media/profile/profile_user.jpg'}" class="img-responsive" alt="">
 							</div>
 							<!-- END SIDEBAR USERPIC -->
 							<!-- SIDEBAR USER TITLE -->
@@ -143,7 +143,7 @@ layout("/layout/default.html",{"menu":["acl","user_admin"],"breadcrumbs":[{"name
 												</thead>
 												<tbody>
 													<tr>
-														<td class="fit"><img class="user-pic" src="${base!}/assets/metronic/pages/media/users/avatar4.jpg"></td>
+														<td class="fit"><img class="user-pic" src="${ctxPath!}/assets/metronic/pages/media/users/avatar4.jpg"></td>
 														<td><a href="javascript:;" class="primary-link">Brain</a></td>
 														<td>$345</td>
 														<td>45</td>
@@ -151,7 +151,7 @@ layout("/layout/default.html",{"menu":["acl","user_admin"],"breadcrumbs":[{"name
 														<td><span class="bold theme-font">80%</span></td>
 													</tr>
 													<tr>
-														<td class="fit"><img class="user-pic" src="${base!}/assets/metronic/pages/media/users/avatar5.jpg"></td>
+														<td class="fit"><img class="user-pic" src="${ctxPath!}/assets/metronic/pages/media/users/avatar5.jpg"></td>
 														<td><a href="javascript:;" class="primary-link">Nick</a></td>
 														<td>$560</td>
 														<td>12</td>
@@ -159,7 +159,7 @@ layout("/layout/default.html",{"menu":["acl","user_admin"],"breadcrumbs":[{"name
 														<td><span class="bold theme-font">67%</span></td>
 													</tr>
 													<tr>
-														<td class="fit"><img class="user-pic" src="${base!}/assets/metronic/pages/media/users/avatar6.jpg"></td>
+														<td class="fit"><img class="user-pic" src="${ctxPath!}/assets/metronic/pages/media/users/avatar6.jpg"></td>
 														<td><a href="javascript:;" class="primary-link">Tim</a></td>
 														<td>$1,345</td>
 														<td>450</td>
@@ -167,7 +167,7 @@ layout("/layout/default.html",{"menu":["acl","user_admin"],"breadcrumbs":[{"name
 														<td><span class="bold theme-font">98%</span></td>
 													</tr>
 													<tr>
-														<td class="fit"><img class="user-pic" src="${base!}/assets/metronic/pages/media/users/avatar7.jpg"></td>
+														<td class="fit"><img class="user-pic" src="${ctxPath!}/assets/metronic/pages/media/users/avatar7.jpg"></td>
 														<td><a href="javascript:;" class="primary-link">Tom</a></td>
 														<td>$645</td>
 														<td>50</td>
@@ -737,7 +737,7 @@ layout("/layout/default.html",{"menu":["acl","user_admin"],"breadcrumbs":[{"name
 													<div class="item">
 														<div class="item-head">
 															<div class="item-details">
-																<img class="item-pic" src="${base!}/assets/metronic/pages/media/users/avatar4.jpg"> <a href="" class="item-name primary-link">Nick Larson</a> <span class="item-label">3
+																<img class="item-pic" src="${ctxPath!}/assets/metronic/pages/media/users/avatar4.jpg"> <a href="" class="item-name primary-link">Nick Larson</a> <span class="item-label">3
 																	hrs ago</span>
 															</div>
 															<span class="item-status"> <span class="badge badge-empty badge-success"></span> Open
@@ -749,7 +749,7 @@ layout("/layout/default.html",{"menu":["acl","user_admin"],"breadcrumbs":[{"name
 													<div class="item">
 														<div class="item-head">
 															<div class="item-details">
-																<img class="item-pic" src="${base!}/assets/metronic/pages/media/users/avatar3.jpg"> <a href="" class="item-name primary-link">Mark</a> <span class="item-label">5 hrs
+																<img class="item-pic" src="${ctxPath!}/assets/metronic/pages/media/users/avatar3.jpg"> <a href="" class="item-name primary-link">Mark</a> <span class="item-label">5 hrs
 																	ago</span>
 															</div>
 															<span class="item-status"> <span class="badge badge-empty badge-warning"></span> Pending
@@ -761,7 +761,7 @@ layout("/layout/default.html",{"menu":["acl","user_admin"],"breadcrumbs":[{"name
 													<div class="item">
 														<div class="item-head">
 															<div class="item-details">
-																<img class="item-pic" src="${base!}/assets/metronic/pages/media/users/avatar6.jpg"> <a href="" class="item-name primary-link">Nick Larson</a> <span class="item-label">8
+																<img class="item-pic" src="${ctxPath!}/assets/metronic/pages/media/users/avatar6.jpg"> <a href="" class="item-name primary-link">Nick Larson</a> <span class="item-label">8
 																	hrs ago</span>
 															</div>
 															<span class="item-status"> <span class="badge badge-empty badge-primary"></span> Closed
@@ -772,7 +772,7 @@ layout("/layout/default.html",{"menu":["acl","user_admin"],"breadcrumbs":[{"name
 													<div class="item">
 														<div class="item-head">
 															<div class="item-details">
-																<img class="item-pic" src="${base!}/assets/metronic/pages/media/users/avatar7.jpg"> <a href="" class="item-name primary-link">Nick Larson</a> <span class="item-label">12
+																<img class="item-pic" src="${ctxPath!}/assets/metronic/pages/media/users/avatar7.jpg"> <a href="" class="item-name primary-link">Nick Larson</a> <span class="item-label">12
 																	hrs ago</span>
 															</div>
 															<span class="item-status"> <span class="badge badge-empty badge-danger"></span> Pending
@@ -784,7 +784,7 @@ layout("/layout/default.html",{"menu":["acl","user_admin"],"breadcrumbs":[{"name
 													<div class="item">
 														<div class="item-head">
 															<div class="item-details">
-																<img class="item-pic" src="${base!}/assets/metronic/pages/media/users/avatar9.jpg"> <a href="" class="item-name primary-link">Richard Stone</a> <span class="item-label">2
+																<img class="item-pic" src="${ctxPath!}/assets/metronic/pages/media/users/avatar9.jpg"> <a href="" class="item-name primary-link">Richard Stone</a> <span class="item-label">2
 																	days ago</span>
 															</div>
 															<span class="item-status"> <span class="badge badge-empty badge-danger"></span> Open
@@ -795,7 +795,7 @@ layout("/layout/default.html",{"menu":["acl","user_admin"],"breadcrumbs":[{"name
 													<div class="item">
 														<div class="item-head">
 															<div class="item-details">
-																<img class="item-pic" src="${base!}/assets/metronic/pages/media/users/avatar8.jpg"> <a href="" class="item-name primary-link">Dan</a> <span class="item-label">3 days
+																<img class="item-pic" src="${ctxPath!}/assets/metronic/pages/media/users/avatar8.jpg"> <a href="" class="item-name primary-link">Dan</a> <span class="item-label">3 days
 																	ago</span>
 															</div>
 															<span class="item-status"> <span class="badge badge-empty badge-warning"></span> Pending
@@ -806,7 +806,7 @@ layout("/layout/default.html",{"menu":["acl","user_admin"],"breadcrumbs":[{"name
 													<div class="item">
 														<div class="item-head">
 															<div class="item-details">
-																<img class="item-pic" src="${base!}/assets/metronic/pages/media/users/avatar2.jpg"> <a href="" class="item-name primary-link">Larry</a> <span class="item-label">4 hrs
+																<img class="item-pic" src="${ctxPath!}/assets/metronic/pages/media/users/avatar2.jpg"> <a href="" class="item-name primary-link">Larry</a> <span class="item-label">4 hrs
 																	ago</span>
 															</div>
 															<span class="item-status"> <span class="badge badge-empty badge-success"></span> Open

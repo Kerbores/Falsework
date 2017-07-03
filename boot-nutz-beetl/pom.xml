@@ -99,11 +99,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
 			<groupId>org.nutz</groupId>
 			<artifactId>nutz-plugins-spring-boot-starter</artifactId>
 			<version>1.r.62-SNAPSHOT</version>

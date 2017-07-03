@@ -50,7 +50,7 @@ layout("/layout/default.html",{"menu":["acl","user_admin"],"breadcrumbs":[{"name
 							<input class="form-control" type="text" placeholder="请输入邮箱地址" name="email" data-type='email' data-error='请输入正确的邮箱地址' value="${obj.data.user.email!}">
 						</div>
 					</div>
-					<input type="hidden" id="id" name="id" value="${obj.data.user.id!}">
+					<input type="hidden" id="id" name="id" value="${obj.data.user.id!0}">
 					<div class="form-group ">
 						<label class="control-label col-lg-3"> 用户状态 : </label>
 						<div class="col-lg-9">
@@ -75,7 +75,7 @@ layout("/layout/default.html",{"menu":["acl","user_admin"],"breadcrumbs":[{"name
 	function save(btn) {
 		$("input[name='status']").val($("input[name='statusSwitch']")[0].checked ? "ACTIVED" : "DISABLED"); //将开关状态刷回表单进行提交
 		if ($('#addUserForm').find('input').validation()) { //验证表单
-			if ($('#id').val()) {
+			if ($('#id').val()!=0) {
 				$.post(Common.getRootPath() + '/user/edit', $('#addUserForm').serialize(), function(result) {
 					if (result.operationState == 'SUCCESS') {
 						location.href = Common.getRootPath() + "/user/list";
