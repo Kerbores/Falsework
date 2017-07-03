@@ -17,4 +17,4 @@ target/
 
 .gitkeep
 .vscode-upload.json
-
+node_modules
