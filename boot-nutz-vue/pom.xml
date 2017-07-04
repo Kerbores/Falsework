@@ -124,7 +124,7 @@
 							<arguments>
 								<argument>install</argument>
 							</arguments>
-							<workingDirectory>${basedir}/src/main/resources/front</workingDirectory>
+							<workingDirectory>${basedir}/src/main/front</workingDirectory>
 						</configuration>
 					</execution>
 
@@ -140,22 +140,43 @@
 								<argument>run</argument>
 								<argument>build</argument>
 							</arguments>
-							<workingDirectory>${basedir}/src/main/resources/front</workingDirectory>
+							<workingDirectory>${basedir}/src/main/front</workingDirectory>
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.outputDirectory}</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${project.basedir}/src/main/front/dist</directory>
+									<targetPath>${destDir}</targetPath>
+									<filtering>false</filtering>
+								</resource>
+							</resources>
+						</configuration>
+						<inherited></inherited>
+					</execution>
+				</executions>
+
 			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
-		<resources>
-			<resource>
-				<directory>${project.basedir}/src/main/resources/front/dist</directory>
-				<targetPath>${destDir}</targetPath>
-			</resource>
-		</resources>
+		<!-- <resources> <resource> <directory>${project.basedir}/src/main/resources/front/dist</directory> 
+			<targetPath>${destDir}</targetPath> </resource> </resources> -->
 	</build>
 	<profiles>
 		<profile>
