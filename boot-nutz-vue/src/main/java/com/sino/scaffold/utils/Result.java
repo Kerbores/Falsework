@@ -7,10 +7,14 @@ import org.nutz.json.Json;
 import org.nutz.json.JsonFormat;
 import org.nutz.lang.util.NutMap;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * @author kerbores
  *
  */
+@ApiModel("响应结果")
 public class Result {
 	/**
 	 * 创建一个异常结果
@@ -98,16 +102,19 @@ public class Result {
 	 * 操作结果数据 假设一个操作要返回很多的数据 一个用户名 一个产品 一个相关产品列表 一个产品的评论信息列表 我们以key
 	 * value形式进行保存，页面获取data对象读取其对于的value即可
 	 */
+	@ApiModelProperty("数据")
 	private NutMap data = new NutMap();
 
 	/**
 	 * 带状态的操作 比如登录有成功和失败
 	 */
+	@ApiModelProperty("状态")
 	private OperationState operationState = OperationState.DEFAULT;
 
 	/**
 	 * 用于在jsp中显示标题的字段 title
 	 */
+	@ApiModelProperty("标题")
 	private String title;
 
 	public Result() {
@@ -173,6 +180,7 @@ public class Result {
 	 * 
 	 * @return
 	 */
+	@ApiModelProperty("数据的nutMap封装")
 	public NutMap getNutMapData() {
 		return NutMap.WRAP(data);
 	}
@@ -186,6 +194,7 @@ public class Result {
 	 * 
 	 * @return
 	 */
+	@ApiModelProperty("失败原因")
 	public String getReason() {
 		return getData().getString("reason");
 	}
@@ -199,6 +208,7 @@ public class Result {
 	 * 
 	 * @return
 	 */
+	@ApiModelProperty("是否业务处理成功标识")
 	public boolean isSuccess() {
 		return getOperationState() == OperationState.SUCCESS;
 	}

@@ -1,29 +1,37 @@
 package com.sino.scaffold.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * @author kerbores kerbores@gmail.com
  *
  */
+@ApiModel("登录模型")
 public class UserLoginDto {
 
 	/**
 	 * 用户名
 	 */
+	@ApiModelProperty("用户名")
 	private String userName;
 
 	/**
 	 * 密码
 	 */
+	@ApiModelProperty("密码")
 	private String password;
 
 	/**
 	 * 记住用户密码
 	 */
+	@ApiModelProperty("是否记住密码")
 	private boolean rememberMe = true;
 
 	/**
 	 * 验证码
 	 */
+	@ApiModelProperty("验证码")
 	private String captcha;
 
 	/**

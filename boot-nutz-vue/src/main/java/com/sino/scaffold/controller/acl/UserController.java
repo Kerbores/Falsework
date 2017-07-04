@@ -20,12 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sino.scaffold.BootNutzVueApplication;
 import com.sino.scaffold.bean.InstallPermission;
-import com.sino.scaffold.bean.InstalledRole;
 import com.sino.scaffold.bean.acl.User;
 import com.sino.scaffold.controller.base.BaseController;
 import com.sino.scaffold.dto.UserLoginDto;
 import com.sino.scaffold.ext.shiro.anno.SINORequiresPermissions;
-import com.sino.scaffold.ext.shiro.anno.SINORequiresRoles;
 import com.sino.scaffold.ext.shiro.matcher.SINOCredentialsMatcher;
 import com.sino.scaffold.rest.ApiRequest;
 import com.sino.scaffold.service.acl.ShiroUserService;
@@ -33,12 +31,18 @@ import com.sino.scaffold.service.acl.UserService;
 import com.sino.scaffold.utils.DES;
 import com.sino.scaffold.utils.Result;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import springfox.documentation.annotations.ApiIgnore;
+
 /**
  * @author kerbores
  *
  */
 @RestController
 @RequestMapping("user")
+@Api(value = "User", tags = { "用户模块" }, consumes = "信息是二位")
 public class UserController extends BaseController {
 
 	@Autowired
@@ -56,7 +60,8 @@ public class UserController extends BaseController {
 	 */
 	@GetMapping("list")
 	@SINORequiresPermissions(InstallPermission.USER_LIST)
-	public Result list(@RequestParam(value = "page", defaultValue = "1") int page) {
+	@ApiOperation(value = "用户分页列表")
+	public Result list(@RequestParam(value = "page", defaultValue = "1") @ApiParam("页码") int page) {
 		return Result.success().addData("pager", userService.searchByPage(_fixPage(page), Cnd.NEW().desc("id")));
 	}
 
@@ -70,7 +75,8 @@ public class UserController extends BaseController {
 	 */
 	@GetMapping("search")
 	@SINORequiresPermissions(InstallPermission.USER_LIST)
-	public Result search(@RequestParam("key") String key, @RequestParam(value = "page", defaultValue = "1") int page) {
+	@ApiOperation(value = "用户分页检索")
+	public Result search(@RequestParam("key") @ApiParam("搜索关键字") String key, @RequestParam(value = "page", defaultValue = "1") @ApiParam("页码") int page) {
 		return Result.success()
 				.addData("pager", userService.searchByKeyAndPage(
 						_fixSearchKey(key),
@@ -88,6 +94,7 @@ public class UserController extends BaseController {
 	 */
 	@PostMapping(value = "add")
 	@SINORequiresPermissions(InstallPermission.USER_ADD)
+	@ApiOperation(value = "新增用户")
 	public Result save(@RequestBody User user) {
 		user.setPassword(SINOCredentialsMatcher.password(user.getName(), user.getPassword()));// 密码密文转换
 		return userService.save(user) == null ? Result.fail("保存用户失败!") : Result.success().addData("user", user);
@@ -102,6 +109,7 @@ public class UserController extends BaseController {
 	 */
 	@PostMapping(value = "edit")
 	@SINORequiresPermissions(InstallPermission.USER_EDIT)
+	@ApiOperation(value = "修改用户基本信息", notes = "仅修改姓名,电话,邮箱和状态信息")
 	public Result edit(@RequestBody User user) {
 		return userService.update(user, "realName", "phone", "email", "status") ? Result.success() : Result.fail("更新用户失败!");
 	}
@@ -115,6 +123,7 @@ public class UserController extends BaseController {
 	 */
 	@PostMapping(value = "resetPassword")
 	@SINORequiresPermissions(InstallPermission.USER_EDIT)
+	@ApiOperation(value = "重置用户密码")
 	public Result resetPassword(@RequestBody User user) {
 		user.setPassword(SINOCredentialsMatcher.password(user.getName(), user.getPassword()));// 密码密文转换
 		return userService.update(user, "password") != 1 ? Result.fail("保存用户失败!") : Result.success().addData("user", user);
@@ -129,7 +138,8 @@ public class UserController extends BaseController {
 	 */
 	@GetMapping("delete/{id}")
 	@SINORequiresPermissions(InstallPermission.USER_DELETE)
-	public Result delete(@PathVariable("id") long id) {
+	@ApiOperation(value = "删除用户")
+	public Result delete(@PathVariable("id") @ApiParam("待删除用户id") long id) {
 		return userService.delete(id) == 1 ? Result.success() : Result.fail("删除用户失败!");
 	}
 
@@ -142,7 +152,8 @@ public class UserController extends BaseController {
 	 */
 	@GetMapping("{id}")
 	@SINORequiresPermissions(InstallPermission.USER_DETAIL)
-	public Result detail(@PathVariable("id") long id) {
+	@ApiOperation(value = "用户详情")
+	public Result detail(@PathVariable("id") @ApiParam("用户id") long id) {
 		return Result.success().addData("user", userService.fetch(id));
 	}
 
@@ -156,7 +167,8 @@ public class UserController extends BaseController {
 	 * @return 登录结果
 	 */
 	@PostMapping("login")
-	public Result login(@RequestBody ApiRequest<UserLoginDto> request, HttpSession session) {
+	@ApiOperation(value = "用户登录")
+	public Result login(@RequestBody ApiRequest<UserLoginDto> request, @ApiIgnore HttpSession session) {
 		if (Strings.equalsIgnoreCase(request.getData().getCaptcha(), Strings.safeToString(session.getAttribute(BootNutzVueApplication.CAPTCHA_KEY), ""))) {
 			Result result = shiroUserService.login(request.getData().getUserName(), request.getData().getPassword(), Lang.getIP(Mvcs.getReq()));
 			if (result.isSuccess()) {
@@ -180,14 +192,9 @@ public class UserController extends BaseController {
 	}
 
 	@GetMapping("logout")
-	public String logout() {
+	@ApiOperation(value = "退出登录")
+	public Result logout() {
 		SecurityUtils.getSubject().logout();
-		return "redirect:/";
-	}
-
-	@GetMapping("shiro")
-	@SINORequiresRoles(InstalledRole.SU)
-	public Result shiro() {
 		return Result.success();
 	}
 
