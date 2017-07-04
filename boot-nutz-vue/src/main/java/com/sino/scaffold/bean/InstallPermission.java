@@ -65,6 +65,18 @@ public enum InstallPermission {
 	 */
 	PERMISSION_LIST("permission.list", "权限管理"),
 	/**
+	 * 权限添加
+	 */
+	PERMISSION_ADD("permission.add", "权限添加"),
+	/**
+	 * 权限编辑
+	 */
+	PERMISSION_EDIT("permission.edit", "编辑权限"),
+	/**
+	 * 权限删除
+	 */
+	PERMISSION_DELETE("permission.delete", "删除权限"),
+	/**
 	 * ++++++++++++++++++++++访问控制++++++++++++++++++++++++++++++++
 	 */
 
@@ -92,9 +104,7 @@ public enum InstallPermission {
 	 * ++++++++++++++++++++++配置管理++++++++++++++++++++++++++++++++
 	 */
 
-
-	;
-	private String name;
+	;private String name;
 
 	private String description;
 

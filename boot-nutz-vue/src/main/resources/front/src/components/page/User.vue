@@ -119,7 +119,7 @@
             </div>
         </el-dialog>
     
-        <el-dialog :title="type=='role' ? '设置角色' : '设置权限'" :visible.sync="grantShow">
+        <el-dialog :title="type=='role' ? '设置角色' : '设置权限'" :visible.sync="grantShow" >
             <template>
                 <el-transfer v-model="selected" :data="options" :titles="['待选项', '已选项']" filterable></el-transfer>
             </template>
@@ -229,7 +229,7 @@ export default {
         grant() {
             let url = '/user/grant/' + this.type;
             let data = {
-                userId: this.user.id,
+                id: this.user.id,
                 grantIds: this.selected
             }
             this.postBody(url, data, result => {

@@ -14,7 +14,7 @@
             <el-col :span="6">
                 <el-input placeholder="请输入内容" v-model="pager.paras.key" icon="search">
                     <div slot="append">
-                        <el-button type="primary" icon="search" @click=" pager.page = 1 ;doSearch()">GO</el-button>
+                        <el-button type="primary" icon="search" @click="  pager.pager.pageNumber = 1;doSearch()">GO</el-button>
                     </div>
                 </el-input>
             </el-col>
@@ -81,7 +81,7 @@
             </div>
         </el-dialog>
 
-        <el-dialog title="设置权限" :visible.sync="grantShow">
+        <el-dialog title="设置权限" :visible.sync="grantShow" >
             <template>
                 <el-transfer v-model="selected" :data="options" :titles="['待选项', '已选项']" filterable></el-transfer>
             </template>
@@ -146,7 +146,7 @@ export default {
     methods: {
         grant() {
             let data = {
-                roleId: this.role.id,
+                id: this.role.id,
                 grantIds: this.selected
             }
             this.postBody('/role/grant/', data, result => {
@@ -167,7 +167,7 @@ export default {
             }
         },
         doSearch() {
-            this.get('/role/search?page=' + this.pager.page + '&key=' + this.pager.paras.key, result => {
+            this.get('/role/search?page=' + this.pager.pager.pageNumber+ '&key=' + this.pager.paras.key, result => {
                 this.pager = result.data.pager;
             })
         },

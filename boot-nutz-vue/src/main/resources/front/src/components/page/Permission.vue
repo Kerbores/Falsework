@@ -14,7 +14,7 @@
             <el-col :span="6">
                 <el-input placeholder="请输入内容" v-model="pager.paras.key" icon="search">
                     <div slot="append">
-                        <el-button type="primary" icon="search" @click=" pager.page = 1 ;doSearch()">GO</el-button>
+                        <el-button type="primary" icon="search" @click="  pager.pager.pageNumber = 1 ;doSearch()">GO</el-button>
                     </div>
                 </el-input>
             </el-col>
@@ -22,7 +22,7 @@
                 <el-button type="primary" icon="plus" @click="addEditShow = true">添加权限</el-button>
             </el-col>
         </el-row>
-        <el-table :data="pager.entities" border style="width: 100%">
+        <el-table :data="pager.dataList" border style="width: 100%">
             <el-table-column prop="id" label="ID" sortable>
             </el-table-column>
             <el-table-column prop="name" label="名称">
@@ -57,7 +57,7 @@
         </el-table>
         <el-row>
             <el-col :span="6" :offset="18">
-                <el-pagination style="float:right" layout="prev, pager, next" :total="pager.count" :page-size="pager.pageSize" :current-page.sync="pager.page" v-show="pager.count != 0"  @current-change="changePage">
+                <el-pagination style="float:right" layout="prev, pager, next" :total="pager.count" :page-size="pager.pageSize" :current-page.sync="pager.page" v-show="pager.count != 0" @current-change="changePage">
                 </el-pagination>
             </el-col>
         </el-row>
@@ -86,12 +86,16 @@ import moment from 'moment'
 export default {
     data() {
         return {
-            searchKey: '',
             pager: {
-                page: 1,
-                pageSize: 15,
-                paras:{
-                    key:'1'
+                dataList: [],
+                pager: {
+                    pageCount: 0,
+                    pageNumber: 1,
+                    pageSize: 15,
+                    recordCount: 0
+                },
+                paras: {
+                    key: ''
                 }
             },
             addEditShow: false,
@@ -114,22 +118,22 @@ export default {
     },
     watch: {},
     methods: {
-        changePage(){
-            if(this.pager.paras.key){
+        changePage() {
+            if (this.pager.paras.key) {
                 this.doSearch();
-            }else{
+            } else {
                 this.loadData();
             }
         },
-        doSearch(){
-            this.get('/permission/search?page=' + this.pager.page + '&key=' + this.pager.paras.key, result => {
+        doSearch() {
+            this.get('/permission/search?page=' + this.pager.pager.pageNumber + '&key=' + this.pager.paras.key, result => {
                 this.pager = result.data.pager;
             })
         },
         saveOrUpdatePermission(formName) {
             this.$refs[formName].validate(valid => {
                 if (valid) {
-                    let url = this.permission.id ? '/permission/update' : '/permission/save'
+                    let url = this.permission.id ? '/permission/edit' : '/permission/add'
                     this.postBody(url, this.permission, result => {
                         this.changePage();
                         this.addEditShow = false;
@@ -140,14 +144,14 @@ export default {
             })
         },
         handleEdit(index, row) {
-            let id = this.pager.entities[index].id;
+            let id = row.id;
             this.get('/permission/' + id, result => {
                 this.permission = result.data.permission;
                 this.addEditShow = true;
             })
         },
         handleDelete(index, row) {
-            let id = this.pager.entities[index].id;
+            let id = row.id;
             this.$confirm('确认删除权限?', '删除确认', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -158,17 +162,17 @@ export default {
                         type: 'success',
                         message: '删除成功!'
                     });
-                    window.setTimeout(()=>{
+                    window.setTimeout(() => {
                         this.changePage();
-                    },2000)
+                    }, 2000)
                 })
             }).catch(() => {
             });
         },
         loadData() {
-            this.get('/permission/list?page=' + this.pager.page, result => {
+            this.get('/permission/list?page=' + this.pager.pager.pageNumber, result => {
                 this.pager = result.data.pager;
-                this.pager.paras={key:''}
+                this.pager.paras = { key: '' }
             })
         }
     },

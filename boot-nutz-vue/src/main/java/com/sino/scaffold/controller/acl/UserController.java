@@ -22,6 +22,7 @@ import com.sino.scaffold.BootNutzVueApplication;
 import com.sino.scaffold.bean.InstallPermission;
 import com.sino.scaffold.bean.acl.User;
 import com.sino.scaffold.controller.base.BaseController;
+import com.sino.scaffold.dto.GrantDTO;
 import com.sino.scaffold.dto.UserLoginDto;
 import com.sino.scaffold.ext.shiro.anno.SINORequiresPermissions;
 import com.sino.scaffold.ext.shiro.matcher.SINOCredentialsMatcher;
@@ -155,6 +156,60 @@ public class UserController extends BaseController {
 	@ApiOperation(value = "用户详情")
 	public Result detail(@PathVariable("id") @ApiParam("用户id") long id) {
 		return Result.success().addData("user", userService.fetch(id));
+	}
+
+	/**
+	 * 获取用户的角色信息
+	 * 
+	 * @param id
+	 *            用户id
+	 * @return
+	 */
+	@GetMapping("role/{id}")
+	@SINORequiresPermissions(InstallPermission.USER_ROLE)
+	@ApiOperation(value = "用户角色授权信息")
+	public Result roleInfo(@PathVariable("id") @ApiParam("用户id") int id) {
+		return Result.success().addData("infos", userService.findRolesWithUserPowerdInfoByUserId(id));
+	}
+
+	/**
+	 * 获取用户的权限信息
+	 * 
+	 * @param id
+	 *            用户id
+	 * @return
+	 */
+	@GetMapping("permission/{id}")
+	@SINORequiresPermissions(InstallPermission.USER_GRANT)
+	@ApiOperation(value = "用户权限信息")
+	public Result permissionInfo(@PathVariable("id") @ApiParam("用户id") int id) {
+		return Result.success().addData("infos", userService.findPermissionsWithUserPowerdInfoByUserId(id));
+	}
+
+	/**
+	 * 为用户设置角色
+	 * 
+	 * @param dto
+	 * @return
+	 */
+	@PostMapping("/grant/role")
+	@SINORequiresPermissions(InstallPermission.USER_ROLE)
+	@ApiOperation("为用户设置角色")
+	public Result grantRole(@RequestBody GrantDTO dto) {
+		return userService.setRole(dto.getGrantIds(), dto.getId());
+	}
+
+	/**
+	 * 为用户设置权限
+	 * 
+	 * @param dto
+	 * @return
+	 */
+	@PostMapping("/grant/permission")
+	@SINORequiresPermissions(InstallPermission.USER_GRANT)
+	@ApiOperation("为用户设置权限")
+	public Result grantPermission(@RequestBody GrantDTO dto) {
+		return userService.setPermission(dto.getGrantIds(), dto.getId());
 	}
 
 	/**

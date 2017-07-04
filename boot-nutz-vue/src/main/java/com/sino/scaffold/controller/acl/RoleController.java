@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sino.scaffold.bean.InstallPermission;
 import com.sino.scaffold.bean.acl.Role;
 import com.sino.scaffold.controller.base.BaseController;
+import com.sino.scaffold.dto.GrantDTO;
 import com.sino.scaffold.ext.shiro.anno.SINORequiresPermissions;
 import com.sino.scaffold.service.acl.RoleService;
 import com.sino.scaffold.utils.Result;
@@ -116,6 +117,33 @@ public class RoleController extends BaseController {
 	@ApiOperation("编辑角色")
 	public Result update(@RequestBody Role role) {
 		return roleService.updateIgnoreNull(role) != 1 ? Result.fail("更新角色失败!") : Result.success().addData("role", role);
+	}
+
+	/**
+	 * 获取角色的权限设置信息
+	 * 
+	 * @param id
+	 *            角色id
+	 * @return
+	 */
+	@GetMapping("permission/{id}")
+	@SINORequiresPermissions(InstallPermission.ROLE_GRANT)
+	@ApiOperation("获取角色的授权信息")
+	public Result permissionInfo(@PathVariable("id") @ApiParam("角色id") int id) {
+		return Result.success().addData("infos", roleService.findPermissionsWithRolePowerdInfoByRoleId(id));
+	}
+
+	/**
+	 * 设置角色的权限
+	 * 
+	 * @param dto
+	 * @return
+	 */
+	@PostMapping("grant")
+	@SINORequiresPermissions(InstallPermission.ROLE_GRANT)
+	@ApiOperation("为角色授权")
+	public Result grantRole(@RequestBody GrantDTO dto) {
+		return roleService.setPermission(dto.getGrantIds(), dto.getId());
 	}
 
 }
