@@ -16,17 +16,24 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sino.scaffold.BootNutzVueApplication;
 import com.sino.scaffold.captcha.ImageVerification;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import springfox.documentation.annotations.ApiIgnore;
+
 /**
  * @author kerbores
  *
  */
 @RestController
+@Api(value = "Index", tags = { "通用" })
 public class IndexController {
 	Log logger = Logs.get();
 
 	@GetMapping("/captcha")
-	public void captcha(@RequestParam(value = "length", required = false, defaultValue = "4") int length,
-			HttpServletResponse resp, HttpSession session) throws IOException {
+	@ApiOperation("验证码")
+	public void captcha(@RequestParam(value = "length", required = false, defaultValue = "4") @ApiParam(value = "验证码长度", required = false, defaultValue = "4") int length,
+			@ApiIgnore HttpServletResponse resp, @ApiIgnore HttpSession session) throws IOException {
 		resp.setContentType("image/jpeg");
 		resp.setHeader("Pragma", "No-cache");
 		resp.setHeader("Cache-Control", "no-cache");
