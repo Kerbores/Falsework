@@ -12,7 +12,7 @@ import axios from 'axios';
 import ElTreeGrid from 'element-tree-grid';
 Vue.component(ElTreeGrid.name, ElTreeGrid);
 
-global.baseUrl = process.env.NODE_ENV == "development" ? 'Hammer-rest' : '';
+global.baseUrl = process.env.NODE_ENV == "development" ? 'api' : '';
 
 Vue.prototype.requestFail = function(error, message) {
     if (error.response && error.response.status == 403) {

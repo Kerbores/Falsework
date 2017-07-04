@@ -14,7 +14,7 @@
             <el-col :span="6">
                 <el-input placeholder="请输入内容" v-model="pager.paras.key" icon="search">
                     <div slot="append">
-                        <el-button type="primary" icon="search" @click=" pager.page = 1 ;doSearch()">GO</el-button>
+                        <el-button type="primary" icon="search" @click=" pager.pager.pageNumber = 1 ; doSearch()">GO</el-button>
                     </div>
                 </el-input>
             </el-col>
@@ -22,7 +22,7 @@
                 <el-button type="primary" icon="plus" @click="addEditShow = true">添加用户</el-button>
             </el-col>
         </el-row>
-        <el-table :data="pager.entities" border style="width: 100%">
+        <el-table :data="pager.dataList" border style="width: 100%">
             <el-table-column prop="id" label="ID" sortable>
             </el-table-column>
             <el-table-column prop="name" label="用户名">
@@ -33,7 +33,7 @@
             </el-table-column>
             <el-table-column prop="status" label="状态">
                 <template scope="scope">
-                    <el-tag :type="scope.row.status === 'A' ? 'success' : 'danger'" close-transition>{{scope.row.status == 'A' ? 'ACTIVIED' : 'DISABLED'}}</el-tag>
+                    <el-tag :type="scope.row.status === 'ACTIVED' ? 'success' : 'danger'" close-transition>{{scope.row.status == 'ACTIVED' ? 'ACTIVIED' : 'DISABLED'}}</el-tag>
                 </template>
             </el-table-column>
             <el-table-column label="操作">
@@ -71,14 +71,14 @@
         </el-table>
         <el-row>
             <el-col :span="6" :offset="18">
-                <el-pagination style="float:right" layout="prev, pager, next" :total="pager.count" :page-size="pager.pageSize" :current-page.sync="pager.page" v-show="pager.count != 0" @current-change="changePage">
+                <el-pagination style="float:right" layout="prev, pager, next" :total="pager.pager.recordCount" :page-size="pager.pager.pageSize" :current-page.sync="pager.pager.pageNumber" v-show="pager.pager.pageCount != 0" @current-change="changePage">
                 </el-pagination>
             </el-col>
         </el-row>
         <!-- 弹框区域-->
         <el-dialog :title="user.id == 0 ? '添加用户' : '编辑用户' " :visible.sync="addEditShow" size="tiny">
             <el-form :model="user" :rules="checkUser" ref="userForm">
-                <el-form-item label="用户名" :label-width="formLabelWidth" prop="name">
+                <el-form-item label="用户名" :label-width="formLabelWidth" prop="name" v-show="user.name !='disabled'">
                     <el-input v-model="user.name" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="真实姓名" :label-width="formLabelWidth" prop="realName">
@@ -97,12 +97,12 @@
                     <el-input v-model="user.email" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="用户状态" :label-width="formLabelWidth">
-                    <el-switch v-model="user.status" on-text="ACTIVIED" off-text="DISABLED" on-value="A" off-value="D" :width="100">
+                    <el-switch v-model="user.status" on-text="ACTIVIED" off-text="DISABLED" on-value="ACTIVED" off-value="DISABLED" :width="100">
                     </el-switch>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="addEditShow = false ; user = {status:'A'}">取 消</el-button>
+                <el-button @click="addEditShow = false ; user = {status:'ACTIVED'}">取 消</el-button>
                 <el-button type="primary" @click="saveOrUpdateUser('userForm')">确 定</el-button>
             </div>
         </el-dialog>
@@ -159,12 +159,16 @@ export default {
             }
         };
         return {
-            searchKey: '',
             pager: {
-                page: 1,
-                pageSize: 15,
+                dataList: [],
+                pager: {
+                    pageCount: 0,
+                    pageNumber: 1,
+                    pageSize: 15,
+                    recordCount: 0
+                },
                 paras: {
-                    key: '1'
+                    key: ''
                 }
             },
             selected: [],
@@ -177,7 +181,7 @@ export default {
                 id: 0,
                 name: '',
                 realName: '',
-                status: 'A',
+                status: 'ACTIVED',
                 password: '',
                 rePassword: '',
                 phone: '',
@@ -212,7 +216,7 @@ export default {
         }
     },
     watch: {
-        options: function () {
+        options() {
             this.selected = [];
             this.options.forEach(item => {
                 if (item.selected) {
@@ -254,7 +258,7 @@ export default {
             })
         },
         handleReset(index, row) {
-            this.user.id = this.pager.entities[index].id;
+            this.user.id = row.id;
             this.resetShow = true;
         },
         changePage() {
@@ -265,14 +269,14 @@ export default {
             }
         },
         doSearch() {
-            this.get('/user/search?page=' + this.pager.page + '&key=' + this.pager.paras.key, result => {
+            this.get('/user/search?page=' + this.pager.pager.pageNumber + '&key=' + this.pager.paras.key, result => {
                 this.pager = result.data.pager;
             })
         },
         saveOrUpdateUser(formName) {
             this.$refs[formName].validate(valid => {
                 if (valid) {
-                    let url = this.user.id ? '/user/update' : '/user/save'
+                    let url = this.user.id ? '/user/edit' : '/user/add'
                     this.postBody(url, this.user, result => {
                         if (this.pager.paras.key) {
                             this.doSearch();
@@ -290,18 +294,19 @@ export default {
             return moment(row.createTime, "YYYY-MM-DD hh:mm:ss").format('YYYY年MM月DD日');
         },
         handleEdit(index, row) {
-            let id = this.pager.entities[index].id;
+            let id = row.id;
             this.get('/user/' + id, result => {
                 this.user = result.data.user;
                 this.user.password = '00000000';
                 this.user.rePassword = '00000000';
+                this.user.name = 'disabled'
                 this.addEditShow = true;
             })
         },
         handleGrant(index, row, type) {
-            this.user.id = this.pager.entities[index].id;
+            this.user.id = row.id;
             this.type = type;
-            let url = '/user/' + type + "/" + this.pager.entities[index].id;
+            let url = '/user/' + type + "/" + row.id;
             this.get(url, result => {
                 this.options = [];
                 result.data.infos.forEach((item, index) => {
@@ -315,7 +320,7 @@ export default {
             })
         },
         handleDelete(index, row) {
-            let id = this.pager.entities[index].id;
+            let id = row.id;
             this.$confirm('确认删除用户?', '删除确认', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -338,9 +343,9 @@ export default {
             });
         },
         loadData() {
-            this.get('/user/list?page=' + this.pager.page, result => {
+            this.get('/user/list?page=' + this.pager.pager.pageNumber, result => {
                 this.pager = result.data.pager;
-                this.pager.paras = { key: '' }
+                this.pager.paras = { key: '' };
             })
         }
     },
