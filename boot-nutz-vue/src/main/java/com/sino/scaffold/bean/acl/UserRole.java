@@ -24,23 +24,23 @@ public class UserRole extends Entity {
 
 	@Column("u_id")
 	@Comment("用户id")
-	private int userId;
+	private long userId;
 
 	@Column("r_id")
 	@Comment("角色id")
-	private int roleId;
+	private long roleId;
 
 	/**
 	 * @return the roleId
 	 */
-	public int getRoleId() {
+	public long getRoleId() {
 		return roleId;
 	}
 
 	/**
 	 * @return the userId
 	 */
-	public int getUserId() {
+	public long getUserId() {
 		return userId;
 	}
 
@@ -48,7 +48,7 @@ public class UserRole extends Entity {
 	 * @param roleId
 	 *            the roleId to set
 	 */
-	public void setRoleId(int roleId) {
+	public void setRoleId(long roleId) {
 		this.roleId = roleId;
 	}
 
@@ -56,7 +56,7 @@ public class UserRole extends Entity {
 	 * @param userId
 	 *            the userId to set
 	 */
-	public void setUserId(int userId) {
+	public void setUserId(long userId) {
 		this.userId = userId;
 	}
 

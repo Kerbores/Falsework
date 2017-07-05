@@ -24,16 +24,16 @@ public class RolePermission extends Entity {
 
 	@Column("r_id")
 	@Comment("角色id")
-	private int roleId;
+	private long roleId;
 
 	@Column("p_id")
 	@Comment("权限id")
-	private int permissionId;
+	private long permissionId;
 
 	/**
 	 * @return the permissionId
 	 */
-	public int getPermissionId() {
+	public long getPermissionId() {
 		return permissionId;
 	}
 
@@ -48,7 +48,7 @@ public class RolePermission extends Entity {
 	 * @param permissionId
 	 *            the permissionId to set
 	 */
-	public void setPermissionId(int permissionId) {
+	public void setPermissionId(long permissionId) {
 		this.permissionId = permissionId;
 	}
 
@@ -56,7 +56,7 @@ public class RolePermission extends Entity {
 	 * @param roleId
 	 *            the roleId to set
 	 */
-	public void setRoleId(int roleId) {
+	public void setRoleId(long roleId) {
 		this.roleId = roleId;
 	}
 

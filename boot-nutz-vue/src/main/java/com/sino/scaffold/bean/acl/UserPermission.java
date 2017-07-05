@@ -25,25 +25,25 @@ public class UserPermission extends Entity {
 	 */
 	@Column("u_id")
 	@Comment("用户id")
-	private int userId;
+	private long userId;
 	/**
 	 * 权限id
 	 */
 	@Column("p_id")
 	@Comment("权限id")
-	private int permissionId;
+	private long permissionId;
 
 	/**
 	 * @return the permissionId
 	 */
-	public int getPermissionId() {
+	public long getPermissionId() {
 		return permissionId;
 	}
 
 	/**
 	 * @return the userId
 	 */
-	public int getUserId() {
+	public long getUserId() {
 		return userId;
 	}
 
@@ -51,7 +51,7 @@ public class UserPermission extends Entity {
 	 * @param permissionId
 	 *            the permissionId to set
 	 */
-	public void setPermissionId(int permissionId) {
+	public void setPermissionId(long permissionId) {
 		this.permissionId = permissionId;
 	}
 
@@ -59,7 +59,7 @@ public class UserPermission extends Entity {
 	 * @param userId
 	 *            the userId to set
 	 */
-	public void setUserId(int userId) {
+	public void setUserId(long userId) {
 		this.userId = userId;
 	}
 

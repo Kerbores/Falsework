@@ -5,14 +5,14 @@ package com.sino.scaffold.dto;
  *
  */
 public class GrantDTO {
-	private int id;
+	private long id;
 
-	private int[] grantIds;
+	private long[] grantIds;
 
 	/**
 	 * @return the id
 	 */
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
@@ -20,15 +20,15 @@ public class GrantDTO {
 	 * @param id
 	 *            the id to set
 	 */
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
-	public int[] getGrantIds() {
+	public long[] getGrantIds() {
 		return grantIds;
 	}
 
-	public void setGrantIds(int[] grantIds) {
+	public void setGrantIds(long[] grantIds) {
 		this.grantIds = grantIds;
 	}
 }

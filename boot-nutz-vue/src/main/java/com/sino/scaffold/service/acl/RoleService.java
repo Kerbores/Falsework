@@ -59,16 +59,16 @@ public class RoleService extends BaseService<Role> {
 	 * @param roleId
 	 * @return
 	 */
-	public Result setPermission(int[] ids, int roleId) {
+	public Result setPermission(long[] ids, long roleId) {
 		/**
 		 * 1.查询全部权限列表<br>
 		 * 2.遍历权限.如果存在,则更新时间.如果不存在则删除,处理之后从目标数组中移除;<br>
 		 * 3.遍历余下的目标数组
 		 */
 		if (ids == null) {
-			ids = new int[] {};
+			ids = new long[] {};
 		}
-		List<Integer> newIds = Lang.array2list(ids, Integer.class);
+		List<Long> newIds = Lang.array2list(ids, Long.class);
 		Collections.sort(newIds);
 		List<RolePermission> rolePermissions = rolePermissionService.query(Cnd.where("roleId", "=", roleId));
 		for (RolePermission role : rolePermissions) {
@@ -80,7 +80,7 @@ public class RoleService extends BaseService<Role> {
 				rolePermissionService.delete(role.getId());
 			}
 		}
-		for (int pid : newIds) {
+		for (long pid : newIds) {
 			RolePermission rolep = new RolePermission();
 			rolep.setRoleId(roleId);
 			rolep.setPermissionId(pid);
