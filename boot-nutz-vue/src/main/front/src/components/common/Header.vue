@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="header">
-            <div class="logo">Thunder VUE</div>
+            <div class="logo">SINOSOFT STAFF</div>
             <div class="user-info">
                 <el-dropdown trigger="click" @command="handleCommand">
                     <span class="el-dropdown-link">
