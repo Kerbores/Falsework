@@ -104,6 +104,7 @@ public class BootNutzVueApplication {
 							temp = new Permission();
 							temp.setName(permission.getName());
 							temp.setDescription(permission.getDescription());
+							temp.setInstalled(true);
 							temp = permissionService.save(temp);
 						}
 
