@@ -35,9 +35,12 @@ spring:
       stat-view-servlet:
         enabled: true
         url-pattern: /druid/*
-        login-username: root
-        login-password: 123456
+#        login-username: root
+#        login-password: 123456
         resetEnable: true
+management:
+  security:
+    enabled: false
 #server
 server:
   port: 8080
