@@ -1,13 +1,12 @@
 package com.sino.scaffold;
 
+import org.apache.log4j.Logger;
 import org.nutz.dao.Cnd;
 import org.nutz.lang.ContinueLoop;
 import org.nutz.lang.Each;
 import org.nutz.lang.ExitLoop;
 import org.nutz.lang.Lang;
 import org.nutz.lang.LoopException;
-import org.nutz.log.Log;
-import org.nutz.log.Logs;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -50,21 +49,24 @@ public class BootNutzVueApplication {
 	public static final String USER_COOKIE_KEY = "SINO_USER_COOKIE";
 
 	public static void main(String[] args) {
-		SpringApplication.run(BootNutzVueApplication.class, args).addApplicationListener(new ApplicationListener<ContextRefreshedEvent>() {
-			Log logger = Logs.get();
+		SpringApplication application = new SpringApplication(BootNutzVueApplication.class);
+		application.addListeners(new ApplicationListener<ContextRefreshedEvent>() {
+			Logger log = Logger.getLogger(getClass());
 
 			Role admin;
 
 			@Override
 			public void onApplicationEvent(ContextRefreshedEvent event) {
-				logger.debug("application started....");
-				// 这里的逻辑将在应用启动之后被执行
+				// 这里的逻辑将在应用启动之后执行
 				ApplicationContext context = event.getApplicationContext();
-				initAcl(context);
+				if (context.getParent() == null) {
+					log.debug("application starter...");
+					initAcl(context);
+				}
 			}
 
 			private void initAcl(ApplicationContext context) {
-				logger.debug("init acl...");
+				log.debug("init acl...");
 				final UserService userService = context.getBean(UserService.class);
 				final RoleService roleService = context.getBean(RoleService.class);
 				final PermissionService permissionService = context.getBean(PermissionService.class);
@@ -136,7 +138,9 @@ public class BootNutzVueApplication {
 					userRoleService.save(ur);
 				}
 			}
+
 		});
+		application.run(args);
 	}
 
 	@Bean
