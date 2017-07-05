@@ -135,7 +135,7 @@ public class Result {
 	 *            待添加的数据
 	 * @return 结果实例
 	 */
-	public Result addData(Map data) {
+	public Result addData(Map<String, Object> data) {
 		Iterator iterator = data.keySet().iterator();
 		while (iterator.hasNext()) {
 			String key = iterator.next().toString();
@@ -175,16 +175,6 @@ public class Result {
 		return data;
 	}
 
-	/**
-	 * 以nutmap包装数据
-	 * 
-	 * @return
-	 */
-	@ApiModelProperty("数据的nutMap封装")
-	public NutMap getNutMapData() {
-		return NutMap.WRAP(data);
-	}
-
 	public OperationState getOperationState() {
 		return operationState;
 	}
@@ -213,7 +203,7 @@ public class Result {
 		return getOperationState() == OperationState.SUCCESS;
 	}
 
-	public Result setData(Map data) {
+	public Result setData(Map<String, Object> data) {
 		this.data = NutMap.WRAP(data);
 		return this;
 	}
