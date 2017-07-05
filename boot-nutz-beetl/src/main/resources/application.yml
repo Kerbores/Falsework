@@ -1,0 +1,69 @@
+#application
+spring:
+  application:
+    name: sino soft scaffold nutz dao beetl\u7248
+    version: 1.0
+  #REDIS
+  redis:
+    host: 127.0.0.1
+    port: 6379
+  datasource:
+    druid:
+      url: jdbc:mysql://127.0.0.1:3306/spring-thunder?useUnicode=true&characterEncoding=utf8&useSSL=false
+      username: root
+      password: 123456
+      driver-class-name: com.mysql.jdbc.Driver
+      
+      filters: stat,wall,log4j
+      initialSize: 10
+      minIdle: 1
+      maxActive: 50
+      maxWait: 60000
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: SELECT 'sino soft'
+      testWhileIdle: true
+      testOnBorrow: true
+      testOnReturn: false
+      poolPreparedStatements: true
+      maxPoolPreparedStatementPerConnectionSize: 20
+      
+      web-stat-filter:
+        enabled: true
+        url-pattern: /*
+        exclusions: /druid/*,*.js,*.gif,*.jpg,*.png,*.css,*.ico
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        login-username: root
+        login-password: 123456
+        resetEnable: true
+#server
+server:
+  port: 8080
+#LOG
+#logging.level.root=DEBUG
+logging:
+  level:
+    org.nutz: DEBUG
+    com.sino: DEBUG
+#nutz-dao
+nutz:
+  dao:
+    runtime:
+      add-column: true
+      basepackage:
+      - com.sino.scaffold.bean
+      check-index: true
+      create: true
+      delete-column: true
+      foce-create: false
+      migration: true
+    sqlmanager:
+      paths:
+      - sqls/
+  json:
+    mode: compact
+sino:
+  config:
+    test: test111
