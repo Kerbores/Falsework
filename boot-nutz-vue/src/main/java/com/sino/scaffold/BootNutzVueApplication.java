@@ -2,6 +2,8 @@ package com.sino.scaffold;
 
 import org.apache.log4j.Logger;
 import org.nutz.dao.Cnd;
+import org.nutz.dao.Dao;
+import org.nutz.dao.util.Daos;
 import org.nutz.lang.ContinueLoop;
 import org.nutz.lang.Each;
 import org.nutz.lang.ExitLoop;
@@ -59,8 +61,11 @@ public class BootNutzVueApplication {
 			public void onApplicationEvent(ContextRefreshedEvent event) {
 				// 这里的逻辑将在应用启动之后执行
 				ApplicationContext context = event.getApplicationContext();
+				Dao dao = context.getBean(Dao.class);
 				if (context.getParent() == null) {
 					log.debug("application starter...");
+					Daos.createTablesInPackage(dao, "com.sino.scaffold.bean", false);// 确保表结构正确
+					Daos.migration(dao, "com.sino.scaffold.bean", true, true);
 					initAcl(context);
 				}
 			}

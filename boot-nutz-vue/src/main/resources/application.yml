@@ -52,7 +52,7 @@ nutz:
   dao:
     runtime:
       add-column: true
-      basepackage:
+      basepackage: 
       - com.sino.scaffold.bean
       check-index: true
       create: true
