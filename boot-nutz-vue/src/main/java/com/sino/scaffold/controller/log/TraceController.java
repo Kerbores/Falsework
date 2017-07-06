@@ -1,5 +1,6 @@
 package com.sino.scaffold.controller.log;
 
+import org.nutz.dao.Cnd;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,7 +40,7 @@ public class TraceController extends BaseController {
 	@SINORequiresRoles(InstalledRole.SU)
 	@ApiOperation("登录日志列表")
 	public Result list(@RequestParam(value = "page", defaultValue = "1") @ApiParam("页码") int page) {
-		return Result.success().addData("pager", loginLogService.searchByPage(_fixPage(page)));
+		return Result.success().addData("pager", loginLogService.searchByPage(_fixPage(page), Cnd.NEW().desc("id")));
 	}
 
 	/**

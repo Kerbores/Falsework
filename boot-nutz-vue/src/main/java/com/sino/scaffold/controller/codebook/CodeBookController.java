@@ -45,7 +45,7 @@ public class CodeBookController extends BaseController {
 	@SINORequiresPermissions(InstallPermission.CODEBOOK_LIST)
 	@ApiOperation("码本列表")
 	public Result list(@RequestParam(value = "page", defaultValue = "1") @ApiParam("页码") int page) {
-		return Result.success().addData("pager", codebookService.searchByPage(_fixPage(page), Cnd.where("parentId", "=", 0)));
+		return Result.success().addData("pager", codebookService.searchByPage(_fixPage(page), Cnd.where("parentId", "=", 0).desc("id")));
 	}
 
 	/**

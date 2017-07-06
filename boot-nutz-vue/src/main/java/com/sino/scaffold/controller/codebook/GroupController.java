@@ -46,7 +46,7 @@ public class GroupController extends BaseController {
 	@SINORequiresPermissions(InstallPermission.GROUP_LIST)
 	@ApiOperation("码本分组列表")
 	public Result list(@RequestParam(value = "page", defaultValue = "1") @ApiParam("页码") int page) {
-		return Result.success().addData("pager", groupService.searchByPage(_fixPage(page)));
+		return Result.success().addData("pager", groupService.searchByPage(_fixPage(page), Cnd.NEW().desc("id")));
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package com.sino.scaffold.controller.log;
 
+import org.nutz.dao.Cnd;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,7 +39,7 @@ public class SystemLogController extends BaseController {
 	@SINORequiresRoles(InstalledRole.SU)
 	@ApiOperation("审计日志列表")
 	public Result list(@RequestParam(value = "page", defaultValue = "1") @ApiParam("页码") int page) {
-		return Result.success().addData("pager", operationLogService.searchByPage(_fixPage(page)));
+		return Result.success().addData("pager", operationLogService.searchByPage(_fixPage(page), Cnd.NEW().desc("id")));
 	}
 
 	@GetMapping("search")
