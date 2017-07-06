@@ -22,7 +22,7 @@
                 <el-button type="primary" icon="plus" @click="addEditShow = true">添加配置</el-button>
             </el-col>
         </el-row>
-        <el-table :data="pager.entities" border style="width: 100%">
+        <el-table :data="pager.dataList" border style="width: 100%">
             <el-table-column prop="id" label="ID" sortable>
             </el-table-column>
             <el-table-column prop="name" label="名称">
@@ -54,7 +54,7 @@
         </el-table>
         <el-row>
             <el-col :span="6" :offset="18">
-                <el-pagination style="float:right" layout="prev, pager, next" :total="pager.count" :page-size="pager.pageSize" :current-page.sync="pager.page" v-show="pager.count != 0"  @current-change="changePage">
+                 <el-pagination style="float:right" layout="prev, pager, next" :total="pager.pager.recordCount" :page-size="pager.pager.pageSize" :current-page.sync="pager.pager.pageNumber" v-show="pager.pager.pageCount != 0" @current-change="changePage">
                 </el-pagination>
             </el-col>
         </el-row>
@@ -86,12 +86,16 @@ import moment from 'moment'
 export default {
     data() {
         return {
-            searchKey: '',
-            pager: {
-                page: 1,
-                pageSize: 15,
-                paras:{
-                    key:'1'
+           pager: {
+                dataList: [],
+                pager: {
+                    pageCount: 0,
+                    pageNumber: 1,
+                    pageSize: 15,
+                    recordCount: 0
+                },
+                paras: {
+                    key: ''
                 }
             },
             addEditShow: false,
@@ -123,14 +127,14 @@ export default {
             }
         },
         doSearch(){
-            this.get('/config/search?page=' + this.pager.page + '&key=' + this.pager.paras.key, result => {
+            this.get('/config/search?page=' + this.pager.pager.pageNumber + '&key=' + this.pager.paras.key, result => {
                 this.pager = result.data.pager;
             })
         },
         saveOrUpdateConfig(formName) {
             this.$refs[formName].validate(valid => {
                 if (valid) {
-                    let url = this.config.id ? '/config/update' : '/config/save'
+                    let url = this.config.id ? '/config/edit' : '/config/add'
                     this.postBody(url, this.config, result => {
                         this.changePage();
                         this.addEditShow = false;
@@ -141,14 +145,14 @@ export default {
             })
         },
         handleEdit(index, row) {
-            let id = this.pager.entities[index].id;
+            let id = row.id;
             this.get('/config/' + id, result => {
                 this.config = result.data.config;
                 this.addEditShow = true;
             })
         },
         handleDelete(index, row) {
-            let id = this.pager.entities[index].id;
+            let id = row.id;
             this.$confirm('确认删除配置?', '删除确认', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -167,7 +171,7 @@ export default {
             });
         },
         loadData() {
-            this.get('/config/list?page=' + this.pager.page, result => {
+            this.get('/config/list?page=' + this.pager.pager.pageNumber, result => {
                 this.pager = result.data.pager;
                 this.pager.paras={key:''}
             })
