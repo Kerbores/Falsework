@@ -16,18 +16,18 @@
                     <el-select v-model="groupId" slot="prepend" placeholder="请选择分组" style="min-width:125px">
                        <el-option
                             v-for="item in groups"
-                            :label="item.name"
+                            :label="item.description"
                             :value="item.id">
                         </el-option>
                     </el-select>
-                    <el-button type="primary" slot="append" icon="search" @click=" pager.page = 1 ;doSearch()">GO</el-button>
+                    <el-button type="primary" slot="append" icon="search" @click=" pager.pager.pageNumber = 1;doSearch()">GO</el-button>
                 </el-input>
             </el-col>
             <el-col :span="6" :offset="10">
                 <el-button type="primary" icon="plus" @click="addEditShow = true ; codebook={groupId:null};nodes=[]">添加码本</el-button>
             </el-col>
         </el-row>
-        <el-table :data="pager.entities" border style="width: 100%">
+        <el-table :data="pager.dataList" border style="width: 100%">
             <el-table-tree-column 
             :remote="remote"
             file-icon="icon icon-file" 
@@ -61,7 +61,7 @@
         </el-table>
         <el-row>
             <el-col :span="6" :offset="18">
-                <el-pagination style="float:right" layout="prev, pager, next" :total="pager.count" :page-size="pager.pageSize" :current-page.sync="pager.page" v-show="pager.count != 0" @current-change="changePage">
+                 <el-pagination style="float:right" layout="prev, pager, next" :total="pager.pager.recordCount" :page-size="pager.pager.pageSize" :current-page.sync="pager.pager.pageNumber" v-show="pager.pager.pageCount != 0" @current-change="changePage">
                 </el-pagination>
             </el-col>
         </el-row>
@@ -109,12 +109,16 @@ export default {
                 children: 'children',
                 label: 'value'
             },
-            searchKey: '',
-            pager: {
-                page: 1,
-                pageSize: 15,
+             pager: {
+                dataList: [],
+                pager: {
+                    pageCount: 0,
+                    pageNumber: 1,
+                    pageSize: 15,
+                    recordCount: 0
+                },
                 paras: {
-                    key: '1'
+                    key: ''
                 }
             },
             addEditShow: false,
@@ -157,7 +161,7 @@ export default {
                     item.depth = row.depth ? row.depth+1:1;
                      data.push(item)
                  })
-                // row.children = data;
+                row.children = data;
                 callback(data);
             })
         },
@@ -188,23 +192,22 @@ export default {
             }
         },
         doSearch() {
-            this.get('/codebook/search?page=' + this.pager.page +'&group='+this.groupId + '&key=' + this.pager.paras.key, result => {
+            this.get('/codebook/search?page=' + this.pager.pager.pageNumber +'&group='+this.groupId + '&key=' + this.pager.paras.key, result => {
                 console.log(result);
                  this.pager = result.data.pager;
-                this.pager.entities.forEach(item=>{
+                this.pager.dataList.forEach(item=>{
                     item.children = [{}];
                     item.depth = 1;
                 });
             })
         },
         saveOrUpdateCodebook(formName) {
-            debugger;
             if (this.$refs.tree.getCheckedNodes().length) {
                 this.codebook.parentId = this.$refs.tree.getCheckedNodes()[0].id
             }
             this.$refs[formName].validate(valid => {
                 if (valid) {
-                    let url = this.codebook.id ? '/codebook/update' : '/codebook/save'
+                    let url = this.codebook.id ? '/codebook/edit' : '/codebook/add'
                     this.postBody(url, this.codebook, result => {
                         this.changePage();
                         this.addEditShow = false;
@@ -242,10 +245,10 @@ export default {
             });
         },
         loadData() {
-            this.get('/codebook/list?page=' + this.pager.page, result => {
+            this.get('/codebook/list?page=' + this.pager.pager.pageNumber, result => {
                 this.pager = result.data.pager;
                 this.pager.paras = { key: '' };
-                this.pager.entities.forEach(item=>{
+                this.pager.dataList.forEach(item=>{
                     item.children = [{}];
                     item.depth = 1;
                 });
