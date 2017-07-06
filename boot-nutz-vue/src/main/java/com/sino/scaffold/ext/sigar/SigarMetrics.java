@@ -1,13 +1,11 @@
 package com.sino.scaffold.ext.sigar;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.hyperic.sigar.OperatingSystem;
+import org.hyperic.sigar.FileSystem;
+import org.hyperic.sigar.FileSystemUsage;
 import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.SigarException;
 import org.nutz.log.Log;
@@ -33,10 +31,8 @@ public class SigarMetrics implements PublicMetrics {
 	@Override
 	public Collection<Metric<?>> metrics() {
 		List<Metric<?>> metrics = new ArrayList<Metric<?>>();
-		// TODO 计算精度问题
 		try {
-			Sigar sigar = null;
-			sigar = SigarFactory.load(applicationContext);
+			final Sigar sigar = SigarFactory.load(applicationContext);
 			// CPU
 			metrics.add(new Metric<Number>("cpu.total", sigar.getCpu().getTotal()));
 			metrics.add(new Metric<Number>("cpu.idle", sigar.getCpu().getIdle()));
@@ -74,44 +70,42 @@ public class SigarMetrics implements PublicMetrics {
 			metrics.add(new Metric<Number>("swap.page.out", sigar.getSwap().getPageOut()));
 			metrics.add(new Metric<Number>("swap.total", sigar.getSwap().getTotal()));
 			metrics.add(new Metric<Number>("swap.used", sigar.getSwap().getUsed()));
-			metrics.add(new Metric<Number>("swap.usage", 100 * sigar.getSwap().getUsed() / sigar.getSwap().getTotal()));
+			metrics.add(new Metric<Number>("swap.usage", sigar.getSwap().getUsed() * 100 / sigar.getSwap().getTotal()));
 
 			// JVM
-			Runtime r = Runtime.getRuntime();
-			metrics.add(new Metric<Number>("jvm.max", r.maxMemory()));
-			metrics.add(new Metric<Number>("jvm.free", r.freeMemory()));
-			metrics.add(new Metric<Number>("jvm.total", r.totalMemory()));
-			metrics.add(new Metric<Number>("jvm.usage", 100 - 100 * r.freeMemory() / (r.totalMemory() + r.freeMemory())));
-			if (OperatingSystem.IS_WIN32) {
 
-			} else {
-				float ioUsage = 0.0f;
-				Process pro = null;
-				String command = "iostat -d -x";
-				try {
-					pro = r.exec(command);
-					BufferedReader in = new BufferedReader(new InputStreamReader(pro.getInputStream()));
-					String line = null;
-					int count = 0;
-					while ((line = in.readLine()) != null) {
-						if (++count >= 4) {
-							String[] temp = line.split("\\s+");
-							if (temp.length > 1) {
-								float util = Float.parseFloat(temp[temp.length - 1]);
-								ioUsage = (ioUsage > util) ? ioUsage : util;
-							}
-						}
+			Runtime runtime = Runtime.getRuntime();
+
+			long max = runtime.maxMemory();
+			long total = runtime.totalMemory();
+			long free = runtime.freeMemory();
+			long usable = max - total + free;
+			double freePercent = 100 * usable / max;
+			double usedPercent = 100 - freePercent;
+
+			metrics.add(new Metric<Number>("jvm.max", max));
+			metrics.add(new Metric<Number>("jvm.free", free));
+			metrics.add(new Metric<Number>("jvm.total", total));
+			metrics.add(new Metric<Number>("jvm.usable", usable));
+			metrics.add(new Metric<Number>("jvm.free.percent", freePercent));
+			metrics.add(new Metric<Number>("jvm.usage", usedPercent));
+
+			long read = 0;
+			long write = 0;
+			for (FileSystem fs : sigar.getFileSystemList()) {
+				if (fs.getType() == FileSystem.TYPE_LOCAL_DISK) {
+					try {
+						FileSystemUsage usage = sigar.getFileSystemUsage(fs.getDirName());
+						read += usage.getDiskReadBytes();
+						write += usage.getDiskWriteBytes();
+					} catch (SigarException e) {
+						e.printStackTrace();
 					}
-					if (ioUsage > 0) {
-						ioUsage /= 100;
-					}
-					in.close();
-					pro.destroy();
-					metrics.add(new Metric<Number>("disk.io", ioUsage));
-				} catch (IOException e) {
-					e.printStackTrace();
 				}
 			}
+
+			metrics.add(new Metric<Number>("disk.read", read));
+			metrics.add(new Metric<Number>("disk.write", write));
 		} catch (SigarException e) {
 			e.printStackTrace();
 		}
