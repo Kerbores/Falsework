@@ -39,6 +39,10 @@ public class BaseController {
 		response.addCookie(cookie);
 	}
 
+	public HttpServletRequest request() {
+		return request;
+	}
+
 	public String _base() {
 		return request.getContextPath();
 	}

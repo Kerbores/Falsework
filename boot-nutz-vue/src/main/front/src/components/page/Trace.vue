@@ -12,12 +12,12 @@
             <el-col :span="6">
                 <el-input placeholder="请输入内容" v-model="pager.paras.key" icon="search">
                     <div slot="append">
-                        <el-button type="primary" icon="search" @click=" pager.page = 1 ;doSearch()">GO</el-button>
+                        <el-button type="primary" icon="search" @click=" pager.pager.pageNumber = 1 ;doSearch()">GO</el-button>
                     </div>
                 </el-input>
             </el-col>
         </el-row>
-        <el-table :data="pager.entities" border style="width: 100%">
+        <el-table :data="pager.dataList" border style="width: 100%">
             <el-table-column prop="id" label="ID" sortable>
             </el-table-column>
             <el-table-column prop="loginTime" label="时间" show-overflow-tooltip :formatter="formatter">
@@ -27,14 +27,14 @@
             <el-table-column prop="ip" label="ip">
             </el-table-column>
             <el-table-column prop="ip" label="结果">
-             <template scope="scope">
+                <template scope="scope">
                     <el-tag :type="scope.row.success  ? 'success' : 'danger'" close-transition>{{scope.row.success ? '成功' : '失败'}}</el-tag>
                 </template>
             </el-table-column>
         </el-table>
         <el-row>
             <el-col :span="6" :offset="18">
-                <el-pagination style="float:right" layout="prev, pager, next" :total="pager.count" :page-size="pager.pageSize" :current-page.sync="pager.page" v-show="pager.count != 0"  @current-change="changePage">
+                <el-pagination style="float:right" layout="prev, pager, next" :total="pager.count" :page-size="pager.pageSize" :current-page.sync="pager.page" v-show="pager.count != 0" @current-change="changePage">
                 </el-pagination>
             </el-col>
         </el-row>
@@ -47,37 +47,41 @@ import moment from 'moment'
 export default {
     data() {
         return {
-            searchKey: '',
             pager: {
-                page: 1,
-                pageSize: 15,
-                paras:{
-                    key:'1'
+                dataList: [],
+                pager: {
+                    pageCount: 0,
+                    pageNumber: 1,
+                    pageSize: 15,
+                    recordCount: 0
+                },
+                paras: {
+                    key: ''
                 }
             }
         }
     },
     watch: {},
     methods: {
-        changePage(){
-            if(this.pager.paras.key){
+        changePage() {
+            if (this.pager.paras.key) {
                 this.doSearch();
-            }else{
+            } else {
                 this.loadData();
             }
         },
-        formatter(row, column){
-             return moment(row.loginTime, "YYYY-MM-DD HH:mm:ss").format('YYYY/MM/DD HH:mm:ss');
+        formatter(row, column) {
+            return moment(row.loginTime, "YYYY-MM-DD HH:mm:ss").format('YYYY/MM/DD HH:mm:ss');
         },
-        doSearch(){
-            this.get('/trace/search?page=' + this.pager.page + '&key=' + this.pager.paras.key, result => {
+        doSearch() {
+            this.get('/trace/search?page=' + this.pager.pager.pageNumber + '&key=' + this.pager.paras.key, result => {
                 this.pager = result.data.pager;
             })
         },
         loadData() {
-            this.get('/trace/list?page=' + this.pager.page, result => {
+            this.get('/trace/list?page=' + this.pager.pager.pageNumber, result => {
                 this.pager = result.data.pager;
-                this.pager.paras={key:''}
+                this.pager.paras = { key: '' }
             })
         }
     },

@@ -22,6 +22,8 @@ import com.sino.scaffold.bean.acl.Permission;
 import com.sino.scaffold.bean.acl.Role;
 import com.sino.scaffold.bean.acl.User;
 import com.sino.scaffold.bean.acl.User.Type;
+import com.sino.scaffold.bean.log.LoginLog;
+import com.sino.scaffold.service.log.LoginLogService;
 import com.sino.scaffold.utils.Result;
 
 /**
@@ -43,8 +45,8 @@ public class ShiroUserService {
 	@Autowired
 	PermissionService permissionService;
 
-	// @Autowired
-	// LoginLogService loginLogService;
+	@Autowired
+	LoginLogService loginLogService;
 
 	/**
 	 * 检查权限
@@ -287,11 +289,12 @@ public class ShiroUserService {
 			UsernamePasswordToken token = new UsernamePasswordToken(userName, password);
 			token.setRememberMe(true);
 			currentUser.login(token);
-			// LoginLog log = new LoginLog();
-			// log.setAccount(userName);
-			// log.setUserId(user.getId());
-			// log.setIp(Lang.getIP(SpringBeans.getRequest()));
-			// loginLogService.save(log);
+			LoginLog log = new LoginLog();
+			log.setAccount(userName);
+			log.setUserId(user.getId());
+			log.setSuccess(true);
+			log.setIp(ip);
+			loginLogService.save(log);
 			return Result.success().addData("loginUser", user);
 		} catch (LockedAccountException e) {
 			log.debug(e);

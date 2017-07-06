@@ -8,7 +8,6 @@ import org.nutz.json.Json;
 import org.nutz.lang.Lang;
 import org.nutz.lang.Strings;
 import org.nutz.lang.util.NutMap;
-import org.nutz.mvc.Mvcs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -225,7 +224,7 @@ public class UserController extends BaseController {
 	@ApiOperation(value = "用户登录")
 	public Result login(@RequestBody ApiRequest<UserLoginDto> request, @ApiIgnore HttpSession session) {
 		if (Strings.equalsIgnoreCase(request.getData().getCaptcha(), Strings.safeToString(session.getAttribute(BootNutzVueApplication.CAPTCHA_KEY), ""))) {
-			Result result = shiroUserService.login(request.getData().getUserName(), request.getData().getPassword(), Lang.getIP(Mvcs.getReq()));
+			Result result = shiroUserService.login(request.getData().getUserName(), request.getData().getPassword(), Lang.getIP(request()));
 			if (result.isSuccess()) {
 				// 登录成功处理
 				_putSession(BootNutzVueApplication.USER_KEY, result.getData().get("loginUser"));
