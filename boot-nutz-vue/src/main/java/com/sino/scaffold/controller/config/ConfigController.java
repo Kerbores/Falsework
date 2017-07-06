@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sino.scaffold.aop.apm.SystemLog;
 import com.sino.scaffold.bean.InstallPermission;
 import com.sino.scaffold.bean.config.Config;
 import com.sino.scaffold.controller.base.BaseController;
@@ -40,6 +41,7 @@ public class ConfigController extends BaseController {
 	@GetMapping("list")
 	@SINORequiresPermissions(InstallPermission.CONFIG_LIST)
 	@ApiOperation("配置列表")
+	@SystemLog(description = "配置列表", method = "查看配置列表", module = "配置管理")
 	public Result list(@RequestParam(value = "page", defaultValue = "1") @ApiParam("页码") int page) {
 		return Result.success().addData("pager", configService.searchByPage(_fixPage(page)));
 	}

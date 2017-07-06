@@ -12,12 +12,12 @@
             <el-col :span="6">
                 <el-input placeholder="请输入内容" v-model="pager.paras.key" icon="search">
                     <div slot="append">
-                        <el-button type="primary" icon="search" @click=" pager.page = 1 ;doSearch()">GO</el-button>
+                        <el-button type="primary" icon="search" @click=" pager.pager.pageNumber = 1 ;doSearch()">GO</el-button>
                     </div>
                 </el-input>
             </el-col>
         </el-row>
-        <el-table :data="pager.entities" border style="width: 100%">
+        <el-table :data="pager.dataList" border style="width: 100%">
             <el-table-column prop="id" label="ID" sortable>
             </el-table-column>
             <el-table-column prop="actionTime" label="时间" show-overflow-tooltip :formatter="formatter">
@@ -40,7 +40,7 @@
         </el-table>
         <el-row>
             <el-col :span="6" :offset="18">
-                <el-pagination style="float:right" layout="prev, pager, next" :total="pager.count" :page-size="pager.pageSize" :current-page.sync="pager.page" v-show="pager.count != 0"  @current-change="changePage">
+                 <el-pagination style="float:right" layout="prev, pager, next" :total="pager.pager.recordCount" :page-size="pager.pager.pageSize" :current-page.sync="pager.pager.pageNumber" v-show="pager.pager.pageCount != 0" @current-change="changePage">
                 </el-pagination>
             </el-col>
         </el-row>
@@ -53,12 +53,16 @@ import moment from 'moment'
 export default {
     data() {
         return {
-            searchKey: '',
             pager: {
-                page: 1,
-                pageSize: 15,
-                paras:{
-                    key:'1'
+                dataList: [],
+                pager: {
+                    pageCount: 0,
+                    pageNumber: 1,
+                    pageSize: 15,
+                    recordCount: 0
+                },
+                paras: {
+                    key: ''
                 }
             }
         }
@@ -76,12 +80,12 @@ export default {
             }
         },
         doSearch(){
-            this.get('/log/search?page=' + this.pager.page + '&key=' + this.pager.paras.key, result => {
+            this.get('/log/search?page=' + this.pager.pager.pageNumber + '&key=' + this.pager.paras.key, result => {
                 this.pager = result.data.pager;
             })
         },
         loadData() {
-            this.get('/log/list?page=' + this.pager.page, result => {
+            this.get('/log/list?page=' + this.pager.pager.pageNumber, result => {
                 this.pager = result.data.pager;
                 this.pager.paras={key:''}
             })
