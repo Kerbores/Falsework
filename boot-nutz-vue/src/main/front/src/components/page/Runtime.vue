@@ -43,7 +43,7 @@ export default {
             dw: 0,
             activeName2: 'dynamic',
             line: {
-                color: ["#20a0ff", "#13CE66", "#F7BA2A", "#FF4949"],
+                color: ["#20a0ff", "#13CE66", "#F7BA2A", "#FF4949",'#540070', '#84ccd3'],
                 title: {
                     text: '主机实时性能曲线'
                 },
