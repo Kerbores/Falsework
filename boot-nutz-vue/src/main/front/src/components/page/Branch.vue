@@ -12,21 +12,16 @@
         </div>
         <el-row>
             <el-col :span="6">
-                <el-input placeholder="请输入内容" v-model="pager.paras.key" >
-                    <el-button type="primary" slot="append" icon="search" @click=" pager.page = 1 ;doSearch()">GO</el-button>
+                <el-input placeholder="请输入内容" v-model="pager.paras.key">
+                    <el-button type="primary" slot="append" icon="search" @click=" pager.pager.pageNumber = 1 ;doSearch()">GO</el-button>
                 </el-input>
             </el-col>
             <el-col :span="6" :offset="12">
-                <el-button type="primary" icon="plus" @click="addEditShow = true ; codebook={groupId:null};nodes=[]">添加机构</el-button>
+                <el-button type="primary" icon="plus" @click="addEditShow = true ; branch={};nodes=[]">添加机构</el-button>
             </el-col>
         </el-row>
-        <el-table :data="pager.entities" border style="width: 100%">
-            <el-table-tree-column 
-            :remote="remote"
-            file-icon="icon icon-file" 
-            folder-icon="icon icon-folder" 
-            parentKey="parentId"
-            prop="id" label="ID"></el-table-tree-column>
+        <el-table :data="pager.dataList" border style="width: 100%">
+            <el-table-tree-column :remote="remote" file-icon="icon icon-file" folder-icon="icon icon-folder" parentKey="parentId" prop="id" label="ID"></el-table-tree-column>
             <el-table-column prop="name" label="Key">
             </el-table-column>
             <el-table-column prop="value" label="Value">
@@ -59,25 +54,23 @@
             </el-col>
         </el-row>
         <!-- 弹框区域-->
-        <el-dialog :title="codebook.id == 0 ? '添加码本' : '编辑码本' " :visible.sync="addEditShow" size="tiny">
-            <el-form :model="codebook" :rules="checkCodebook" ref="codebookForm">
+        <el-dialog :title="branch.id  ? '编辑机构' : '添加机构' " :visible.sync="addEditShow" size="tiny">
+            <el-form :model="branch" :rules="checkbranch" ref="branchForm">
+                <b-map-component :ak="ak" @notify="notify"></b-map-component>
                 <el-form-item label="上级" :label-width="formLabelWidth" prop="parentId">
                     <el-tree :data="nodes" show-checkbox check-strictly lazy :load="loadNode" node-key="id" ref="tree" highlight-current :props="defaultProps" @check-change="check">
                     </el-tree>
                 </el-form-item>
-                <el-form-item label="Key" :label-width="formLabelWidth" prop="name">
-                    <el-input v-model="codebook.name" auto-complete="off"></el-input>
+                <el-form-item label="机构名称" :label-width="formLabelWidth" prop="name">
+                    <el-input v-model="branch.name" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="Value" :label-width="formLabelWidth" prop="value">
-                    <el-input v-model="codebook.value" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="序号" :label-width="formLabelWidth" prop="index">
-                    <el-input v-model="codebook.index" auto-complete="off"></el-input>
+                <el-form-item label="机构描述" :label-width="formLabelWidth" prop="description">
+                    <el-input v-model="branch.description" auto-complete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="addEditShow = false ; user = {installed:false}">取 消</el-button>
-                <el-button type="primary" @click="saveOrUpdateCodebook('codebookForm')">确 定</el-button>
+                <el-button type="primary" @click="saveOrUpdatebranch('branchForm')">确 定</el-button>
             </div>
         </el-dialog>
     
@@ -87,21 +80,27 @@
 <script>
 import axios from 'axios';
 import moment from 'moment'
+import BMapComponent from '../bdmap/BaiduMap'
 export default {
     data() {
         return {
-            groupId:'',
+            ak: 'CRHkMGE7Db1USNSyFXqVDmdv',
+            groupId: '',
             nodes: [],
             defaultProps: {
                 children: 'children',
                 label: 'value'
             },
-            searchKey: '',
             pager: {
-                page: 1,
-                pageSize: 15,
+                dataList: [],
+                pager: {
+                    pageCount: 0,
+                    pageNumber: 1,
+                    pageSize: 15,
+                    recordCount: 0
+                },
                 paras: {
-                    key: '1'
+                    key: ''
                 }
             },
             addEditShow: false,
@@ -110,11 +109,10 @@ export default {
                 id: 0,
                 name: '',
                 value: '',
-                groupId: null,
                 parentId: 0,
                 index: 0
             },
-            checkCodebook: {
+            checkbranch: {
                 name: [
                     { required: true, message: '请输入码本数据名称', trigger: 'blur' }
                 ],
@@ -130,20 +128,23 @@ export default {
     },
     watch: {},
     methods: {
-        check(node,s,l){
-            if(this.$refs.tree.getCheckedNodes().length > 1){
+        notify(rs) {
+            console.log(rs);
+        },
+        check(node, s, l) {
+            if (this.$refs.tree.getCheckedNodes().length > 1) {
                 this.$message('只能选择一个父节点');
-                this.$refs.tree.setChecked(node,false);
+                this.$refs.tree.setChecked(node, false);
             }
         },
-        remote(row,callback){
-            this.get('/codebook/sub/'+row.id,result=>{
+        remote(row, callback) {
+            this.get('/branch/sub/' + row.id, result => {
                 const data = [];
-                 result.data.codes.forEach(item=>{
+                result.data.codes.forEach(item => {
                     item.children = [{}];
-                    item.depth = row.depth ? row.depth+1:1;
-                     data.push(item)
-                 })
+                    item.depth = row.depth ? row.depth + 1 : 1;
+                    data.push(item)
+                })
                 // row.children = data;
                 callback(data);
             })
@@ -154,7 +155,7 @@ export default {
             })
         },
         loadTop() {
-            if (this.codebook.groupId) {
+            if (this.branch.groupId) {
                 this.get('/beanch/top', result => {
                     this.nodes = result.data.tops;
                 })
@@ -162,7 +163,7 @@ export default {
         },
         loadNode(node, resolve) {
             if (node.data.id) {
-                this.get('/codebook/sub/' + node.data.id, result => {
+                this.get('/branch/sub/' + node.data.id, result => {
                     resolve(result.data.codes)
                 })
             }
@@ -175,24 +176,24 @@ export default {
             }
         },
         doSearch() {
-            this.get('/codebook/search?page=' + this.pager.page +'&group='+this.groupId + '&key=' + this.pager.paras.key, result => {
+            this.get('/branch/search?page=' + this.pager.pager.pageNumber + '&group=' + this.groupId + '&key=' + this.pager.paras.key, result => {
                 console.log(result);
-                 this.pager = result.data.pager;
-                this.pager.entities.forEach(item=>{
+                this.pager = result.data.pager;
+                this.pager.dataList.forEach(item => {
                     item.children = [{}];
                     item.depth = 1;
                 });
             })
         },
-        saveOrUpdateCodebook(formName) {
+        saveOrUpdatebranch(formName) {
             debugger;
             if (this.$refs.tree.getCheckedNodes().length) {
-                this.codebook.parentId = this.$refs.tree.getCheckedNodes()[0].id
+                this.branch.parentId = this.$refs.tree.getCheckedNodes()[0].id
             }
             this.$refs[formName].validate(valid => {
                 if (valid) {
-                    let url = this.codebook.id ? '/codebook/update' : '/codebook/save'
-                    this.postBody(url, this.codebook, result => {
+                    let url = this.branch.id ? '/branch/update' : '/branch/save'
+                    this.postBody(url, this.branch, result => {
                         this.changePage();
                         this.addEditShow = false;
                     })
@@ -203,8 +204,8 @@ export default {
         },
         handleEdit(index, row) {
             let id = row.id;
-            this.get('/codebook/' + id, result => {
-                this.codebook = result.data.codebook;
+            this.get('/branch/' + id, result => {
+                this.branch = result.data.branch;
                 this.loadTop();
                 this.addEditShow = true;
             })
@@ -216,7 +217,7 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                this.get('/codebook/delete/' + id, result => {
+                this.get('/branch/delete/' + id, result => {
                     this.$message({
                         type: 'success',
                         message: '删除成功!'
@@ -229,10 +230,10 @@ export default {
             });
         },
         loadData() {
-            this.get('/branch/list?page=' + this.pager.page, result => {
+            this.get('/branch/list?page=' + this.pager.pager.pageNumber, result => {
                 this.pager = result.data.pager;
                 this.pager.paras = { key: '' };
-                this.pager.entities.forEach(item=>{
+                this.pager.dataList.forEach(item => {
                     item.children = [{}];
                     item.depth = 1;
                 });
@@ -241,10 +242,16 @@ export default {
     },
     mounted: function () {
         this.loadData();
+    },
+    components: {
+        BMapComponent
     }
 }
 </script>
 <style>
+#allmap{
+    min-height: 200px
+}
 .el-row {
     margin-bottom: 20px;
     &:last-child {

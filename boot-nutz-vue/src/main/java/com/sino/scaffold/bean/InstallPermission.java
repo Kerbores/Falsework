@@ -141,6 +141,23 @@ public enum InstallPermission {
 	 */
 	CODEBOOK_DELETE("codebook.delete", "数据状态"),
 
+	/**
+	 * 
+	 */
+	BRANCH_LIST("branch.list", "分支机构列表"),
+	/**
+	 * 
+	 */
+	BRANCH_ADD("branch.add", "分支机构添加"),
+	/**
+	 * 
+	 */
+	BRANCH_EDIT("branch.edit", "分支机构编辑"),
+	/**
+	 * 
+	 */
+	BRANCH_DELETE("beanch.delete", "分支机构状态"),
+
 	;
 	private String name;
 
