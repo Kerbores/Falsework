@@ -27,6 +27,7 @@
 
 <script>
     import IEcharts from 'vue-echarts-v3';
+    import axios from 'axios';
     export default {
         components: {
             IEcharts
@@ -61,9 +62,9 @@
                     }, {
                         type: 'value',
                         scale: true,
-                        max: 5000,
+                        max: 50000000,
                         min: 0,
-                        name: ' k/s',
+                        name: ' packages',
                         boundaryGap: [0.2, 0.2]
                     }],
                     series: [{
@@ -304,19 +305,21 @@
         mounted() {
             const self = this;
             setInterval(function() {
-                self.get('/sigar/api?type=ALL', res => {
+                axios.get(baseUrl+'/metrics').then(resp=>{
+                    let res = resp.data;
                     self.line.xAxis[0].data.push(new Date().toLocaleTimeString()); //时间戳
-                    self.line.series[0].data.push(res.data.cpuUsage);
-                    self.line.series[1].data.push(res.data.jvmUasge);
-                    self.line.series[2].data.push(res.data.ramUasge);
-                    self.line.series[3].data.push(res.data.swapUasge);
-                    self.line.series[4].data.push(res.data.diskUsage);
-                    self.line.series[5].data.push(res.data.niUsage);
-                    self.line.series[6].data.push(res.data.noUsage);
-                    self.gauge.series[0].data[0].value = res.data.cpuUsage.toFixed(2);
-                    self.gauge.series[1].data[0].value =( res.data.niUsage / 1024 ) .toFixed(2);
-                    self.gauge.series[2].data[0].value = res.data.jvmUasge.toFixed(2);
-                    self.gauge.series[3].data[0].value = res.data.ramUasge.toFixed(2);
+                    self.line.series[0].data.push(res['cpu.usage']);//cpu
+                    self.line.series[1].data.push(res['jvm.usage']);
+                    self.line.series[2].data.push(res['mem.user.percent']);
+                    self.line.series[3].data.push(res['swap.usage']);
+                    self.line.series[4].data.push(res['disk.io']);
+                    self.line.series[5].data.push(res['tcp.in.segs']);
+                    self.line.series[6].data.push(res['tcp.out.segs']);
+
+                    self.gauge.series[0].data[0].value = res['cpu.usage'].toFixed(2);
+                    // self.gauge.series[1].data[0].value =( res.data.niUsage / 1024 ) .toFixed(2);
+                    self.gauge.series[2].data[0].value = res['jvm.usage'].toFixed(2);
+                    self.gauge.series[3].data[0].value = res['mem.user.percent'].toFixed(2);
                 })
             }, 2000)
         }

@@ -10,9 +10,12 @@ import java.util.List;
 import org.hyperic.sigar.OperatingSystem;
 import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.SigarException;
+import org.nutz.log.Log;
+import org.nutz.log.Logs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.endpoint.PublicMetrics;
 import org.springframework.boot.actuate.metrics.Metric;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 /**
@@ -21,14 +24,19 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class SigarMetrics implements PublicMetrics {
+
+	Log logger = Logs.get();
+
 	@Autowired
-	SigarService sigarService;
+	ApplicationContext applicationContext;
 
 	@Override
 	public Collection<Metric<?>> metrics() {
 		List<Metric<?>> metrics = new ArrayList<Metric<?>>();
+		// TODO 计算精度问题
 		try {
-			Sigar sigar = sigarService.load();
+			Sigar sigar = null;
+			sigar = SigarFactory.load(applicationContext);
 			// CPU
 			metrics.add(new Metric<Number>("cpu.total", sigar.getCpu().getTotal()));
 			metrics.add(new Metric<Number>("cpu.idle", sigar.getCpu().getIdle()));
@@ -39,6 +47,7 @@ public class SigarMetrics implements PublicMetrics {
 			metrics.add(new Metric<Number>("cpu.sys", sigar.getCpu().getSys()));
 			metrics.add(new Metric<Number>("cpu.user", sigar.getCpu().getUser()));
 			metrics.add(new Metric<Number>("cpu.wait", sigar.getCpu().getWait()));
+			metrics.add(new Metric<Number>("cpu.usage", sigar.getCpuPerc().getCombined() * 100));
 			// MEM
 			metrics.add(new Metric<Number>("mem.free", sigar.getMem().getFree()));
 			metrics.add(new Metric<Number>("mem.actual.free", sigar.getMem().getActualFree()));
@@ -65,11 +74,14 @@ public class SigarMetrics implements PublicMetrics {
 			metrics.add(new Metric<Number>("swap.page.out", sigar.getSwap().getPageOut()));
 			metrics.add(new Metric<Number>("swap.total", sigar.getSwap().getTotal()));
 			metrics.add(new Metric<Number>("swap.used", sigar.getSwap().getUsed()));
+			metrics.add(new Metric<Number>("swap.usage", 100 * sigar.getSwap().getUsed() / sigar.getSwap().getTotal()));
+
 			// JVM
 			Runtime r = Runtime.getRuntime();
 			metrics.add(new Metric<Number>("jvm.max", r.maxMemory()));
 			metrics.add(new Metric<Number>("jvm.free", r.freeMemory()));
 			metrics.add(new Metric<Number>("jvm.total", r.totalMemory()));
+			metrics.add(new Metric<Number>("jvm.usage", 100 - 100 * r.freeMemory() / (r.totalMemory() + r.freeMemory())));
 			if (OperatingSystem.IS_WIN32) {
 
 			} else {

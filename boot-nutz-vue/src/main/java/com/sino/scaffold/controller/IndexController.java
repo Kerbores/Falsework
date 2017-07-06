@@ -2,6 +2,7 @@ package com.sino.scaffold.controller;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
@@ -9,12 +10,16 @@ import javax.servlet.http.HttpSession;
 
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
+import org.nutz.resource.NutResource;
+import org.nutz.resource.Scans;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sino.scaffold.BootNutzVueApplication;
 import com.sino.scaffold.captcha.ImageVerification;
+import com.sino.scaffold.utils.Result;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,6 +34,12 @@ import springfox.documentation.annotations.ApiIgnore;
 @Api(value = "Index", tags = { "通用" })
 public class IndexController {
 	Log logger = Logs.get();
+
+	@GetMapping("tt")
+	public @ResponseBody Result name() {
+		List<NutResource> resources = Scans.me().scan("sigar", ".(so|sl|dylib|dll|lib)$");
+		return Result.success().addData("k", resources.size());
+	}
 
 	@GetMapping("/captcha")
 	@ApiOperation("验证码")

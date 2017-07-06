@@ -41,6 +41,7 @@ Vue.prototype.get = function(url, success, bizFail) { //全局get请求函数
     const message = this.$message;
     const error = this.requestFail;
     axios.get(baseUrl + url).then(resp => {
+        console.log(resp)
         if (resp.status == 200 && resp.data.operationState == 'SUCCESS') {
             success(resp.data);
         } else {
