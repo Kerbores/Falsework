@@ -1,6 +1,7 @@
 package com.sino.scaffold.controller.codebook;
 
 import org.apache.shiro.authz.annotation.Logical;
+import org.nutz.dao.Chain;
 import org.nutz.dao.Cnd;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -103,17 +104,19 @@ public class CodeBookController extends BaseController {
 	}
 
 	/**
-	 * 删除数据
+	 * 设置码本数据状态
 	 * 
 	 * @param id
 	 *            数据id
+	 * @param status
+	 *            状态
 	 * @return
 	 */
-	@GetMapping("delete/{id}")
+	@GetMapping("toggle/{id}/{status}")
 	@SINORequiresPermissions(InstallPermission.CODEBOOK_DELETE)
-	@ApiOperation("删除数据")
-	public Result delete(@PathVariable("id") @ApiParam("数据id") long id) {
-		return codebookService.delete(id) == 1 ? Result.success() : Result.fail("删除数据失败!");
+	@ApiOperation("设置码本数据状态")
+	public Result delete(@PathVariable("id") @ApiParam("数据id") long id, @PathVariable("status") @ApiParam("状态") boolean status) {
+		return codebookService.update(Chain.make("delete", status), Cnd.where("id", "=", id)) == 1 ? Result.success() : Result.fail("删除数据失败!");
 	}
 
 	/**

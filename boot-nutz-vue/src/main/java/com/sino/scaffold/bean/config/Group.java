@@ -21,9 +21,28 @@ public class Group extends Entity {
 	@Comment("分组名称")
 	private String name;
 
+	@Column("g_del")
+	@Comment("分组禁用标识")
+	private boolean delete = false;
+
 	@Column("g_descr")
 	@Comment("分组描述")
 	private String description;
+
+	/**
+	 * @return the delete
+	 */
+	public boolean isDelete() {
+		return delete;
+	}
+
+	/**
+	 * @param delete
+	 *            the delete to set
+	 */
+	public void setDelete(boolean delete) {
+		this.delete = delete;
+	}
 
 	public String getName() {
 		return name;

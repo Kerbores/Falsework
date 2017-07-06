@@ -1,6 +1,8 @@
 package com.sino.scaffold.controller.codebook;
 
 import org.apache.shiro.authz.annotation.Logical;
+import org.nutz.dao.Chain;
+import org.nutz.dao.Cnd;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -92,17 +94,19 @@ public class GroupController extends BaseController {
 	}
 
 	/**
-	 * 删除码本分组
+	 * 切换分组状态
 	 * 
 	 * @param id
 	 *            分组id
+	 * @param status
+	 *            状态
 	 * @return
 	 */
-	@GetMapping("delete/{id}")
+	@GetMapping("toggle/{id}/{status}")
 	@SINORequiresPermissions(InstallPermission.GROUP_DELETE)
-	@ApiOperation("删除码本分组")
-	public Result delete(@PathVariable("id") @ApiParam("分组id") long id) {
-		return groupService.delete(id) == 1 ? Result.success() : Result.fail("删除分组失败!");
+	@ApiOperation("设置码本分组状态")
+	public Result delete(@PathVariable("id") @ApiParam("分组id") long id, @PathVariable("status") @ApiParam("状态") boolean status) {
+		return groupService.update(Chain.make("delete", status), Cnd.where("id", "=", id)) == 1 ? Result.success() : Result.fail("删除分组失败!");
 	}
 
 	/**

@@ -23,6 +23,10 @@ public class CodeBook extends Entity {
 	@Column("c_group_id")
 	private int groupId;
 
+	@Column("c_del")
+	@Comment("数据禁用标识")
+	private boolean delete = false;
+
 	@Column("c_value")
 	private String value;
 
@@ -31,6 +35,21 @@ public class CodeBook extends Entity {
 
 	@Column("c_parent_id")
 	private int parentId;
+
+	/**
+	 * @return the delete
+	 */
+	public boolean isDelete() {
+		return delete;
+	}
+
+	/**
+	 * @param delete
+	 *            the delete to set
+	 */
+	public void setDelete(boolean delete) {
+		this.delete = delete;
+	}
 
 	public String getName() {
 		return name;

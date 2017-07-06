@@ -12,12 +12,9 @@
         </div>
         <el-row>
             <el-col :span="8">
-                <el-input placeholder="请输入内容" v-model="pager.paras.key" >
+                <el-input placeholder="请输入内容" v-model="pager.paras.key">
                     <el-select v-model="groupId" slot="prepend" placeholder="请选择分组" style="min-width:125px">
-                       <el-option
-                            v-for="item in groups"
-                            :label="item.description"
-                            :value="item.id">
+                        <el-option v-for="item in groups" :label="item.description" :value="item.id">
                         </el-option>
                     </el-select>
                     <el-button type="primary" slot="append" icon="search" @click=" pager.pager.pageNumber = 1;doSearch()">GO</el-button>
@@ -28,15 +25,15 @@
             </el-col>
         </el-row>
         <el-table :data="pager.dataList" border style="width: 100%">
-            <el-table-tree-column 
-            :remote="remote"
-            file-icon="icon icon-file" 
-            folder-icon="icon icon-folder" 
-            parentKey="parentId"
-            prop="id" label="ID"></el-table-tree-column>
+            <el-table-tree-column :remote="remote" file-icon="icon icon-file" folder-icon="icon icon-folder" parentKey="parentId" prop="id" label="ID"></el-table-tree-column>
             <el-table-column prop="name" label="Key">
             </el-table-column>
             <el-table-column prop="value" label="Value">
+            </el-table-column>
+            <el-table-column prop="delete" label="状态">
+                <template scope="scope">
+                    <el-tag :type="scope.row.delete  ? 'danger' : 'success'" close-transition>{{scope.row.delete ? '禁用' : '启用'}}</el-tag>
+                </template>
             </el-table-column>
             <el-table-column label="操作">
                 <template scope="scope">
@@ -52,7 +49,7 @@
                             </el-dropdown-item>
                             <el-dropdown-item v-show="!scope.row.installed">
                                 <div @click="handleDelete(scope.$index,scope.row)">
-                                    <i class="fa fa-trash-o"></i> 删除码本</div>
+                                    <i :class="scope.row.delete  ? 'fa fa-toggle-on':'fa fa-toggle-off'"></i> {{scope.row.delete ? '启用数据' : '禁用数据'}}</div>
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
@@ -61,7 +58,7 @@
         </el-table>
         <el-row>
             <el-col :span="6" :offset="18">
-                 <el-pagination style="float:right" layout="prev, pager, next" :total="pager.pager.recordCount" :page-size="pager.pager.pageSize" :current-page.sync="pager.pager.pageNumber" v-show="pager.pager.pageCount != 0" @current-change="changePage">
+                <el-pagination style="float:right" layout="prev, pager, next" :total="pager.pager.recordCount" :page-size="pager.pager.pageSize" :current-page.sync="pager.pager.pageNumber" v-show="pager.pager.pageCount != 0" @current-change="changePage">
                 </el-pagination>
             </el-col>
         </el-row>
@@ -103,13 +100,13 @@ import moment from 'moment'
 export default {
     data() {
         return {
-            groupId:'',
+            groupId: '',
             nodes: [],
             defaultProps: {
                 children: 'children',
                 label: 'value'
             },
-             pager: {
+            pager: {
                 dataList: [],
                 pager: {
                     pageCount: 0,
@@ -147,20 +144,20 @@ export default {
     },
     watch: {},
     methods: {
-        check(node,s,l){
-            if(this.$refs.tree.getCheckedNodes().length > 1){
+        check(node, s, l) {
+            if (this.$refs.tree.getCheckedNodes().length > 1) {
                 this.$message('只能选择一个父节点');
-                this.$refs.tree.setChecked(node,false);
+                this.$refs.tree.setChecked(node, false);
             }
         },
-        remote(row,callback){
-            this.get('/codebook/sub/'+row.id,result=>{
+        remote(row, callback) {
+            this.get('/codebook/sub/' + row.id, result => {
                 const data = [];
-                 result.data.codes.forEach(item=>{
+                result.data.codes.forEach(item => {
                     item.children = [{}];
-                    item.depth = row.depth ? row.depth+1:1;
-                     data.push(item)
-                 })
+                    item.depth = row.depth ? row.depth + 1 : 1;
+                    data.push(item)
+                })
                 row.children = data;
                 callback(data);
             })
@@ -192,10 +189,10 @@ export default {
             }
         },
         doSearch() {
-            this.get('/codebook/search?page=' + this.pager.pager.pageNumber +'&group='+this.groupId + '&key=' + this.pager.paras.key, result => {
+            this.get('/codebook/search?page=' + this.pager.pager.pageNumber + '&group=' + this.groupId + '&key=' + this.pager.paras.key, result => {
                 console.log(result);
-                 this.pager = result.data.pager;
-                this.pager.dataList.forEach(item=>{
+                this.pager = result.data.pager;
+                this.pager.dataList.forEach(item => {
                     item.children = [{}];
                     item.depth = 1;
                 });
@@ -227,15 +224,15 @@ export default {
         },
         handleDelete(index, row) {
             let id = row.id;
-            this.$confirm('确认删除码本数据?', '删除确认', {
+            this.$confirm('确认' + (row.delete ? '启用' : '禁用') + '码本数据?', '操作确认', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                this.get('/codebook/delete/' + id, result => {
+                this.get('/codebook/toggle/' + id + '/' + !row.delete, result => {
                     this.$message({
                         type: 'success',
-                        message: '删除成功!'
+                        message: (row.delete ? '启用' : '禁用') + '成功!'
                     });
                     window.setTimeout(() => {
                         this.changePage();
@@ -248,7 +245,7 @@ export default {
             this.get('/codebook/list?page=' + this.pager.pager.pageNumber, result => {
                 this.pager = result.data.pager;
                 this.pager.paras = { key: '' };
-                this.pager.dataList.forEach(item=>{
+                this.pager.dataList.forEach(item => {
                     item.children = [{}];
                     item.depth = 1;
                 });

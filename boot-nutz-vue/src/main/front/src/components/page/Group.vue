@@ -27,6 +27,11 @@
             </el-table-column>
             <el-table-column prop="name" label="名称">
             </el-table-column>
+            <el-table-column prop="delete" label="状态">
+                <template scope="scope">
+                    <el-tag :type="scope.row.delete  ? 'danger' : 'success'" close-transition>{{scope.row.delete ? '禁用' : '启用'}}</el-tag>
+                </template>
+            </el-table-column>
             <el-table-column prop="description" label="描述">
             </el-table-column>
             <el-table-column label="操作">
@@ -43,7 +48,7 @@
                             </el-dropdown-item>
                             <el-dropdown-item v-show="!scope.row.installed">
                                 <div @click="handleDelete(scope.$index,scope.row)">
-                                    <i class="fa fa-trash-o"></i> 删除分组</div>
+                                    <i :class="scope.row.delete  ? 'fa fa-toggle-on':'fa fa-toggle-off'"></i> {{scope.row.delete ? '启用分组' : '禁用分组'}}</div>
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
@@ -113,14 +118,14 @@ export default {
     },
     watch: {},
     methods: {
-        changePage(){
-            if(this.pager.paras.key){
+        changePage() {
+            if (this.pager.paras.key) {
                 this.doSearch();
-            }else{
+            } else {
                 this.loadData();
             }
         },
-        doSearch(){
+        doSearch() {
             this.get('/group/search?page=' + this.pager.pager.pageNumber + '&key=' + this.pager.paras.key, result => {
                 this.pager = result.data.pager;
             })
@@ -147,19 +152,19 @@ export default {
         },
         handleDelete(index, row) {
             let id = row.id;
-            this.$confirm('确认删除分组?', '删除确认', {
+            this.$confirm('确认' + (row.delete ? '启用' : '禁用') + '分组?', '操作确认', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                this.get('/group/delete/' + id, result => {
+                this.get('/group/toggle/' + id + '/' + !row.delete, result => {
                     this.$message({
                         type: 'success',
-                        message: '删除成功!'
+                        message: (row.delete ? '启用' : '禁用') + '成功!'
                     });
-                    window.setTimeout(()=>{
+                    window.setTimeout(() => {
                         this.changePage();
-                    },2000)
+                    }, 2000)
                 })
             }).catch(() => {
             });
@@ -167,7 +172,7 @@ export default {
         loadData() {
             this.get('/group/list?page=' + this.pager.pager.pageNumber, result => {
                 this.pager = result.data.pager;
-                this.pager.paras={key:''}
+                this.pager.paras = { key: '' }
             })
         }
     },
