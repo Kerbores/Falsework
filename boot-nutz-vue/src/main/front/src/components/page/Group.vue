@@ -22,7 +22,7 @@
                 <el-button type="primary" icon="plus" @click="addEditShow = true">添加分组</el-button>
             </el-col>
         </el-row>
-        <el-table :data="pager.entities" border style="width: 100%">
+        <el-table :data="pager.dataList" border style="width: 100%">
             <el-table-column prop="id" label="ID" sortable>
             </el-table-column>
             <el-table-column prop="name" label="名称">
@@ -52,7 +52,7 @@
         </el-table>
         <el-row>
             <el-col :span="6" :offset="18">
-                <el-pagination style="float:right" layout="prev, pager, next" :total="pager.count" :page-size="pager.pageSize" :current-page.sync="pager.page" v-show="pager.count != 0"  @current-change="changePage">
+                <el-pagination style="float:right" layout="prev, pager, next" :total="pager.pager.recordCount" :page-size="pager.pager.pageSize" :current-page.sync="pager.pager.pageNumber" v-show="pager.pager.pageCount != 0" @current-change="changePage">
                 </el-pagination>
             </el-col>
         </el-row>
@@ -81,12 +81,16 @@ import moment from 'moment'
 export default {
     data() {
         return {
-            searchKey: '',
             pager: {
-                page: 1,
-                pageSize: 15,
-                paras:{
-                    key:'1'
+                dataList: [],
+                pager: {
+                    pageCount: 0,
+                    pageNumber: 1,
+                    pageSize: 15,
+                    recordCount: 0
+                },
+                paras: {
+                    key: ''
                 }
             },
             addEditShow: false,
@@ -117,14 +121,14 @@ export default {
             }
         },
         doSearch(){
-            this.get('/group/search?page=' + this.pager.page + '&key=' + this.pager.paras.key, result => {
+            this.get('/group/search?page=' + this.pager.pager.pageNumber + '&key=' + this.pager.paras.key, result => {
                 this.pager = result.data.pager;
             })
         },
         saveOrUpdateGroup(formName) {
             this.$refs[formName].validate(valid => {
                 if (valid) {
-                    let url = this.group.id ? '/group/update' : '/group/save'
+                    let url = this.group.id ? '/group/edit' : '/group/add'
                     this.postBody(url, this.group, result => {
                         this.changePage();
                         this.addEditShow = false;
@@ -135,14 +139,14 @@ export default {
             })
         },
         handleEdit(index, row) {
-            let id = this.pager.entities[index].id;
+            let id = row.id;
             this.get('/group/' + id, result => {
                 this.group = result.data.group;
                 this.addEditShow = true;
             })
         },
         handleDelete(index, row) {
-            let id = this.pager.entities[index].id;
+            let id = row.id;
             this.$confirm('确认删除分组?', '删除确认', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -161,7 +165,7 @@ export default {
             });
         },
         loadData() {
-            this.get('/group/list?page=' + this.pager.page, result => {
+            this.get('/group/list?page=' + this.pager.pager.pageNumber, result => {
                 this.pager = result.data.pager;
                 this.pager.paras={key:''}
             })
