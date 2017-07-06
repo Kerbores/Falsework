@@ -9,6 +9,7 @@ import org.nutz.mvc.annotation.GET;
 import org.nutz.mvc.annotation.POST;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -66,7 +67,7 @@ public class BranchController extends BaseController {
 			@RequestParam("key") @ApiParam("关键词") String key,
 			@RequestParam(value = "page", defaultValue = "1") @ApiParam("页码") int page) {
 		return Result.success().addData("pager",
-				branchService.searchByKeyAndPage(_fixSearchKey(key), _fixPage(page), Cnd.where("parentId", "=", 0), "name", "value").addParam("key", key));
+				branchService.searchByKeyAndPage(_fixSearchKey(key), _fixPage(page), Cnd.where("parentId", "=", 0), "name", "description", "address").addParam("key", key));
 	}
 
 	@At
@@ -84,10 +85,17 @@ public class BranchController extends BaseController {
 		return Result.success().addData("branch", branchService.fetch(id));
 	}
 
-	@At("/delete/?")
-	@GET
+	/**
+	 * 删除机构
+	 * 
+	 * @param id
+	 *            机构id
+	 * @return
+	 */
+	@GetMapping("delete/{id}")
 	@SINORequiresPermissions(InstallPermission.BRANCH_DELETE)
-	public Result delete(long id) {
+	@ApiOperation("删除机构")
+	public Result delete(@PathVariable("id") @ApiParam("机构id") long id) {
 		return branchService.delete(id) == 1 ? Result.success() : Result.fail("删除数据失败!");
 	}
 
@@ -106,10 +114,17 @@ public class BranchController extends BaseController {
 		return Result.success().addData("tops", branchService.query(Cnd.where("parentId", "=", 0)));
 	}
 
-	@At("/sub/?")
-	@GET
+	/**
+	 * 获取指定机构的下级机构
+	 * 
+	 * @param id
+	 *            机构id
+	 * @return
+	 */
+	@GetMapping("sub/{id}")
 	@SINORequiresPermissions(value = { InstallPermission.BRANCH_EDIT, InstallPermission.BRANCH_LIST }, logical = Logical.OR)
-	public Result sub(long id) {
-		return Result.success().addData("codes", branchService.query(Cnd.where("parentId", "=", id)));
+	@ApiOperation("获取指定机构的下级机构")
+	public Result sub(@PathVariable("id") @ApiParam("机构id") long id) {
+		return Result.success().addData("branchs", branchService.query(Cnd.where("parentId", "=", id)));
 	}
 }

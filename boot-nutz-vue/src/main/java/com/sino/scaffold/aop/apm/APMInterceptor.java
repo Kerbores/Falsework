@@ -18,6 +18,7 @@ import org.nutz.lang.Strings;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import com.sino.scaffold.bean.log.OperationLog;
@@ -88,6 +89,7 @@ public class APMInterceptor {
 		return obj;
 	}
 
+	@Async
 	public void save(OperationLog log) throws InterruptedException {
 		if (dao == null) {
 			LOG.debug(log);
