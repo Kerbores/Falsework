@@ -149,6 +149,10 @@ export default {
                 this.$message('只能选择一个父节点');
                 this.$refs.tree.setChecked(node, false);
             }
+             if (node.id ==  this.codebook.id) {
+                this.$message('不能选择自己作为父节点');
+                this.$refs.tree.setChecked(node, false);
+            }
         },
         remote(row, callback) {
             this.get('/codebook/sub/' + row.id, result => {
