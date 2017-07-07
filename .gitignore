@@ -1,6 +1,7 @@
 *.class
 *.iml
 .idea/
+.vscode/
 .DS_Store
 
 # Package Files #
