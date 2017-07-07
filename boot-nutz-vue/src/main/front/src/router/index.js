@@ -56,8 +56,14 @@ export default new Router({
                     component: resolve => require(['../components/page/Log.vue'], resolve)
                 },
                 {
+                    name: 'organization',
                     path: '/organization',
                     component: resolve => require(['../components/page/Branch.vue'], resolve)
+                },
+                {
+                    name: 'oaoe',
+                    path: '/organization/aoe/:id',
+                    component: resolve => require(['../components/page/BranchAddOrEdit.vue'], resolve)
                 },
                 {
                     path: '/map',

@@ -23,8 +23,13 @@ body,
 .full {
   width: 100%;
   height: 100%;
-  margin: 0;
+  min-height: 400px;
   font-family: "微软雅黑";
+}
+
+.BMap_cpyCtrl,
+.anchorBL {
+  display: none
 }
 
 .row {

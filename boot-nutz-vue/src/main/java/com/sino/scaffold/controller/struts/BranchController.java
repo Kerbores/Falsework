@@ -2,14 +2,11 @@ package com.sino.scaffold.controller.struts;
 
 import org.apache.shiro.authz.annotation.Logical;
 import org.nutz.dao.Cnd;
-import org.nutz.mvc.adaptor.JsonAdaptor;
-import org.nutz.mvc.annotation.AdaptBy;
-import org.nutz.mvc.annotation.At;
-import org.nutz.mvc.annotation.GET;
-import org.nutz.mvc.annotation.POST;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -70,18 +67,31 @@ public class BranchController extends BaseController {
 				branchService.searchByKeyAndPage(_fixSearchKey(key), _fixPage(page), Cnd.where("parentId", "=", 0), "name", "description", "address").addParam("key", key));
 	}
 
-	@At
-	@POST
-	@AdaptBy(type = JsonAdaptor.class)
+	/**
+	 * 添加机构
+	 * 
+	 * @param branch
+	 *            待添加机构
+	 * @return
+	 */
+	@PostMapping("add")
 	@SINORequiresPermissions(InstallPermission.BRANCH_ADD)
-	public Result save(Branch branch) {
+	@ApiOperation("添加机构")
+	public Result save(@RequestBody Branch branch) {
 		return branchService.save(branch) == null ? Result.fail("保存数据失败!") : Result.success().addData("branch", branch);
 	}
 
-	@At("/?")
-	@GET
+	/**
+	 * 机构数据详情
+	 * 
+	 * @param id
+	 *            机构id
+	 * @return
+	 */
+	@GetMapping("{id}")
 	@SINORequiresPermissions(InstallPermission.BRANCH_EDIT)
-	public Result detail(long id) {
+	@ApiOperation("机构详情")
+	public Result detail(@PathVariable("id") @ApiParam("机构id") long id) {
 		return Result.success().addData("branch", branchService.fetch(id));
 	}
 
@@ -99,17 +109,28 @@ public class BranchController extends BaseController {
 		return branchService.delete(id) == 1 ? Result.success() : Result.fail("删除数据失败!");
 	}
 
-	@At
-	@POST
-	@AdaptBy(type = JsonAdaptor.class)
+	/**
+	 * 编辑机构
+	 * 
+	 * @param branch
+	 *            待编辑机构
+	 * @return
+	 */
+	@PostMapping("edit")
 	@SINORequiresPermissions(InstallPermission.BRANCH_EDIT)
-	public Result update(Branch branch) {
+	@ApiOperation("编辑机构")
+	public Result update(@RequestBody Branch branch) {
 		return branchService.updateIgnoreNull(branch) != 1 ? Result.fail("更新数据失败!") : Result.success().addData("branch", branch);
 	}
 
-	@At("/top/?")
-	@GET
+	/**
+	 * 一级机构列表
+	 * 
+	 * @return
+	 */
+	@GetMapping("top")
 	@SINORequiresPermissions(InstallPermission.BRANCH_EDIT)
+	@ApiOperation("一级机构列表")
 	public Result top() {
 		return Result.success().addData("tops", branchService.query(Cnd.where("parentId", "=", 0)));
 	}

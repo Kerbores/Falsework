@@ -81,7 +81,7 @@ export default {
     watch: {},
     methods: {
         goAdd(){
-            this.$router.push({ path: '/readme', params: { userId: 123 }});
+            this.$router.push({ name: 'oaoe', params: { id: 0 }});
         },
         remote(row, callback) {
             this.get('/branch/sub/' + row.id, result => {
@@ -113,12 +113,7 @@ export default {
             })
         },
         handleEdit(index, row) {
-            let id = row.id;
-            this.get('/branch/' + id, result => {
-                this.branch = result.data.branch;
-                this.loadTop();
-                this.addEditShow = true;
-            })
+            this.$router.push({ name: 'oaoe', params: { id: row.id }});
         },
         handleDelete(index, row) {
             let id = row.id;

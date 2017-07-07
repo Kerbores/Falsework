@@ -351,6 +351,9 @@ export default {
     },
     mounted: function () {
         this.loadData();
+    },
+    created(){
+        console.log(this.$route.params)
     }
 }
 </script>
