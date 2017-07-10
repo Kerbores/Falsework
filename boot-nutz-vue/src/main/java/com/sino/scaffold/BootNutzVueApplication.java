@@ -1,14 +1,24 @@
 package com.sino.scaffold;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.log4j.Logger;
 import org.nutz.dao.Cnd;
 import org.nutz.dao.Dao;
 import org.nutz.dao.util.Daos;
+import org.nutz.http.Http;
 import org.nutz.lang.ContinueLoop;
 import org.nutz.lang.Each;
 import org.nutz.lang.ExitLoop;
 import org.nutz.lang.Lang;
 import org.nutz.lang.LoopException;
+import org.nutz.lang.Strings;
+import org.nutz.lang.util.NutMap;
+import org.nutz.log.Log;
+import org.nutz.log.Logs;
+import org.nutz.weixin.impl.WxApi2Impl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -18,6 +28,10 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.web.context.request.async.DeferredResult;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.sino.scaffold.bean.InstallPermission;
 import com.sino.scaffold.bean.InstalledRole;
@@ -27,12 +41,14 @@ import com.sino.scaffold.bean.acl.RolePermission;
 import com.sino.scaffold.bean.acl.User;
 import com.sino.scaffold.bean.acl.User.Status;
 import com.sino.scaffold.bean.acl.UserRole;
+import com.sino.scaffold.bean.qa.Nutzer;
 import com.sino.scaffold.ext.shiro.matcher.SINOCredentialsMatcher;
 import com.sino.scaffold.service.acl.PermissionService;
 import com.sino.scaffold.service.acl.RolePermissionService;
 import com.sino.scaffold.service.acl.RoleService;
 import com.sino.scaffold.service.acl.UserRoleService;
 import com.sino.scaffold.service.acl.UserService;
+import com.sino.scaffold.service.qa.NutzerService;
 
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -46,11 +62,12 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableRedisHttpSession
 @EnableSwagger2
 @EnableAsync
-public class BootNutzVueApplication {
+public class BootNutzVueApplication extends WebMvcConfigurerAdapter {
 
 	public static final String CAPTCHA_KEY = "SINO_CAPTCHA";
 	public static final String USER_KEY = "SINO_USER_KEY";
 	public static final String USER_COOKIE_KEY = "SINO_USER_COOKIE";
+	public static final String NUTZ_USER_KEY = "SINO_NUTZ_USER_KEY";
 
 	public static void main(String[] args) {
 		SpringApplication application = new SpringApplication(BootNutzVueApplication.class);
@@ -174,4 +191,102 @@ public class BootNutzVueApplication {
 				.licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
 				.build();
 	}
+
+	public static class QAUserCheckInterceptor implements HandlerInterceptor {
+
+		@Override
+		public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+			if (!bindedUser(request)) {
+				response.setStatus(401);
+				return false;
+			}
+			return true;
+		}
+
+		/**
+		 * 已绑定用户
+		 * 
+		 * @param request
+		 * @return
+		 */
+		private boolean bindedUser(HttpServletRequest request) {
+			if (request.getSession().getAttribute(BootNutzVueApplication.NUTZ_USER_KEY) == null) {
+				return false;
+			} else if (!(request.getSession().getAttribute(BootNutzVueApplication.NUTZ_USER_KEY) instanceof Nutzer)) {
+				return false;
+			} else if (Strings.isBlank(((Nutzer) request.getSession().getAttribute(BootNutzVueApplication.NUTZ_USER_KEY)).getOpenid())) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+
+		@Override
+		public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+
+		}
+
+		@Override
+		public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+
+		}
+	}
+
+	public static class QAUserInjectInterceptor implements HandlerInterceptor {
+
+		@Autowired
+		WxApi2Impl api;
+
+		@Autowired
+		NutzerService nutzerService;
+
+		Log log = Logs.get();
+
+		@Override
+		public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+			String code = request.getParameter("code");
+			if (Strings.isBlank(code)) {// 没有code参数
+				return true;
+			}
+			String wechatInterface = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + api.getAppid() + "&secret=" + api.getAppsecret() + "&code=" + code
+					+ "&grant_type=authorization_code";
+			log.debug("ready to invoke url : " + wechatInterface);
+			String info = Http.get(wechatInterface).getContent();
+			NutMap data = Lang.map(info);
+			if (data.get("errcode") != null) {// 调用微信出错
+				log.error("=====error msg:" + data.get("errcode") + ",error msg:" + data.get("errmsg") + "======");
+				return true;
+			}
+			log.debug("successful invoke ,return message:\n" + data.toString());
+			request.getSession().setAttribute("openid", data.getString("openid"));
+			request.getSession().setAttribute(BootNutzVueApplication.NUTZ_USER_KEY, nutzerService.fetch(Cnd.where("openid", "=", data.getString("openid"))));
+			return true;
+		}
+
+		@Override
+		public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+
+		}
+
+		@Override
+		public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+		}
+	}
+
+	@Bean
+	public QAUserCheckInterceptor qaUserCheckInterceptor() {
+		return new QAUserCheckInterceptor();
+	}
+
+	@Bean
+	public QAUserInjectInterceptor qaUserInjectInterceptor() {
+		return new QAUserInjectInterceptor();
+	}
+
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		registry.addInterceptor(qaUserCheckInterceptor()).addPathPatterns("/qa/**");// qa用户检测
+		registry.addInterceptor(qaUserInjectInterceptor()).addPathPatterns("/qa/**");// qa用户注入
+	}
+
 }
