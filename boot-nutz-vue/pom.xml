@@ -115,6 +115,11 @@
 			<artifactId>nutz-plugins-spring-boot-starter</artifactId>
 			<version>1.r.62-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>org.nutz</groupId>
+			<artifactId>nutzwx</artifactId>
+			<version>1.r.62-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<build>

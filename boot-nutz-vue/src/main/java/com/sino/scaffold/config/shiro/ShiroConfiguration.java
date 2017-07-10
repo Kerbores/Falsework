@@ -1,4 +1,4 @@
-package com.sino.scaffold.config;
+package com.sino.scaffold.config.shiro;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

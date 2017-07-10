@@ -1,4 +1,4 @@
-package com.sino.scaffold.config;
+package com.sino.scaffold.config.qiniu;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

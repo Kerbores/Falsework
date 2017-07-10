@@ -1,4 +1,4 @@
-package com.sino.scaffold.config;
+package com.sino.scaffold.config.qiniu;
 
 import java.io.InputStream;
 

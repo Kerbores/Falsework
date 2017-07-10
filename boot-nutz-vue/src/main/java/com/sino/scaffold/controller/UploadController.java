@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.sino.scaffold.config.QiniuAutoConfiguration.QiniuUploader;
-import com.sino.scaffold.config.QiniuAutoConfiguration.R;
+import com.sino.scaffold.config.qiniu.QiniuAutoConfiguration.QiniuUploader;
+import com.sino.scaffold.config.qiniu.QiniuAutoConfiguration.R;
 import com.sino.scaffold.utils.Result;
 
 /**
