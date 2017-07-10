@@ -285,7 +285,8 @@ public class BootNutzVueApplication extends WebMvcConfigurerAdapter {
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(qaUserCheckInterceptor()).addPathPatterns("/qa/**");// qa用户检测
+		registry.addInterceptor(qaUserCheckInterceptor()).addPathPatterns("/qa/**");//
+		// qa用户检测
 		registry.addInterceptor(qaUserInjectInterceptor()).addPathPatterns("/qa/**");// qa用户注入
 	}
 
