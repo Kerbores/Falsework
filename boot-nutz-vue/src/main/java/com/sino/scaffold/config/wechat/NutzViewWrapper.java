@@ -13,7 +13,7 @@ import org.springframework.web.servlet.View;
  * @author kerbores
  *
  */
-public class NutzViewWarpper implements View {
+public class NutzViewWrapper implements View {
 
 	org.nutz.mvc.View view;
 
@@ -22,7 +22,7 @@ public class NutzViewWarpper implements View {
 	/**
 	 * @param view
 	 */
-	public NutzViewWarpper(org.nutz.mvc.View view) {
+	public NutzViewWrapper(org.nutz.mvc.View view) {
 		super();
 		this.view = view;
 	}

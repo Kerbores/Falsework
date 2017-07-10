@@ -17,7 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.View;
 
-import com.sino.scaffold.config.wechat.NutzViewWarpper;
+import com.sino.scaffold.config.wechat.NutzViewWrapper;
 
 /**
  * @author kerbores
@@ -63,6 +63,6 @@ public class WechatEventController {
 
 	@RequestMapping(value = { "wechat", "wechat/?" })
 	public View msgIn(String key, HttpServletRequest req) throws IOException {
-		return new NutzViewWarpper(Wxs.handle(wxHandler, req, key));
+		return new NutzViewWrapper(Wxs.handle(wxHandler, req, key));
 	}
 }
