@@ -3,7 +3,7 @@
     <x-header :left-options="{showBack: false}">帖子列表</x-header>
     <group>
       <button-tab v-model="tabIndex">
-        <button-tab-item v-for="tab in tabs" :key="tab" @on-item-click="changeTab()">{{tab.name}}</button-tab-item>
+        <button-tab-item v-for="tab in tabs" :key="tab" @on-item-click="changeTab()"> {{tab.name}} </button-tab-item>
       </button-tab>
       <scroller lock-x scrollbar-y use-pullup :height="height" @on-pullup-loading="loadMore" ref="scroller">
         <div class="box2">

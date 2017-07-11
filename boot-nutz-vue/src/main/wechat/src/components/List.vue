@@ -1,40 +1,110 @@
 <template>
   <div class="page-navbar">
     <div class="page-title">帖子列表</div>
-    <mt-navbar class="page-part" v-model="selected">
+    <mt-navbar class="page-part" v-model="tab">
       <mt-tab-item v-for="tab in tabs" :key="tab" :id="tab.id">{{tab.name}}</mt-tab-item>
     </mt-navbar>
-    <mt-tab-container v-model="selected" v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
-      <mt-tab-container-item id="0">
-        <mt-cell v-for="n in 10" :key="n" is-link to="https://mint-ui.github.io">
-          <div class="cell-content">
-            <h4 class="cell-content-title">wendal:</h4>
-            <div class="cell-content-summary">
-              内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容内容
-            </div>
-            <div class="cell-content-footer">时间: 10分钟前 点击: 10 回复: 8</div>
-          </div>
-          <img slot="icon" src="https://nutz.cn/yvr/u/wendal/avatar" width="50" height="50">
-        </mt-cell>
+    <mt-tab-container v-model="tab">
+      <mt-tab-container-item id="">
+        <div class="page-loadmore-wrapper" ref="wrapper" :style="{ height: wrapperHeight + 'px' }">
+          <mt-loadmore :bottom-method="loadBottom" @bottom-status-change="handleBottomChange" :bottom-all-loaded="allLoaded" ref="loadmore_">
+            <mt-cell v-for="topic in topics" :key="topic" is-link :to="{ name: 'Detail',params:{id:topic.id} }">
+              <div class="cell-content">
+                <h4 class="cell-content-title">{{topic.author.loginname}}:</h4>
+                <div class="cell-content-summary">
+                  {{topic.title}}
+                </div>
+                <div class="cell-content-footer">发布于: {{topic.create_at_forread}} 点击: {{topic.visit_count}} 回复: {{topic.reply_count}}</div>
+              </div>
+              <img slot="icon" :src="topic.author.avatar_url" width="50" height="50">
+            </mt-cell>
+          </mt-loadmore>
+        </div>
       </mt-tab-container-item>
-      <mt-tab-container-item id="1">
-        <mt-cell v-for="n in 4" :key="n" title="C2" label="跳转到 https://mint-ui.github.io" is-link to="https://mint-ui.github.io"></mt-cell>
+      <mt-tab-container-item id="ask">
+        <div class="page-loadmore-wrapper" ref="wrapper" :style="{ height: wrapperHeight + 'px' }">
+          <mt-loadmore :bottom-method="loadBottom" @bottom-status-change="handleBottomChange" :bottom-all-loaded="allLoaded" ref="loadmore_ask">
+            <mt-cell v-for="topic in topics" :key="topic" is-link :to="{ name: 'Detail',params:{id:topic.id} }">
+              <div class="cell-content">
+                <h4 class="cell-content-title">{{topic.author.loginname}}:</h4>
+                <div class="cell-content-summary">
+                  {{topic.title}}
+                </div>
+                <div class="cell-content-footer">发布于: {{topic.create_at_forread}} 点击: {{topic.visit_count}} 回复: {{topic.reply_count}}</div>
+              </div>
+              <img slot="icon" :src="topic.author.avatar_url" width="50" height="50">
+            </mt-cell>
+          </mt-loadmore>
+        </div>
       </mt-tab-container-item>
-      <mt-tab-container-item id="2">
-        <mt-cell v-for="n in 6" :key="n" title="C3" label="跳转到 https://mint-ui.github.io" is-link to="https://mint-ui.github.io"></mt-cell>
+      <mt-tab-container-item id="news">
+        <div class="page-loadmore-wrapper" ref="wrapper" :style="{ height: wrapperHeight + 'px' }">
+          <mt-loadmore :bottom-method="loadBottom" @bottom-status-change="handleBottomChange" :bottom-all-loaded="allLoaded" ref="loadmore_news">
+            <mt-cell v-for="topic in topics" :key="topic" is-link :to="{ name: 'Detail',params:{id:topic.id} }">
+              <div class="cell-content">
+                <h4 class="cell-content-title">{{topic.author.loginname}}:</h4>
+                <div class="cell-content-summary">
+                  {{topic.title}}
+                </div>
+                <div class="cell-content-footer">发布于: {{topic.create_at_forread}} 点击: {{topic.visit_count}} 回复: {{topic.reply_count}}</div>
+              </div>
+              <img slot="icon" :src="topic.author.avatar_url" width="50" height="50">
+            </mt-cell>
+          </mt-loadmore>
+        </div>
       </mt-tab-container-item>
-      <mt-tab-container-item id="3">
-        <mt-cell v-for="n in 6" :key="n" title="C3" label="跳转到 https://mint-ui.github.io" is-link to="https://mint-ui.github.io"></mt-cell>
+      <mt-tab-container-item id="share">
+        <div class="page-loadmore-wrapper" ref="wrapper" :style="{ height: wrapperHeight + 'px' }">
+          <mt-loadmore :bottom-method="loadBottom" @bottom-status-change="handleBottomChange" :bottom-all-loaded="allLoaded" ref="loadmore_share">
+            <mt-cell v-for="topic in topics" :key="topic" is-link :to="{ name: 'Detail',params:{id:topic.id} }">
+              <div class="cell-content">
+                <h4 class="cell-content-title">{{topic.author.loginname}}:</h4>
+                <div class="cell-content-summary">
+                  {{topic.title}}
+                </div>
+                <div class="cell-content-footer">发布于: {{topic.create_at_forread}} 点击: {{topic.visit_count}} 回复: {{topic.reply_count}}</div>
+              </div>
+              <img slot="icon" :src="topic.author.avatar_url" width="50" height="50">
+            </mt-cell>
+          </mt-loadmore>
+        </div>
       </mt-tab-container-item>
-      <mt-tab-container-item id="4">
-        <mt-cell v-for="n in 6" :key="n" title="C3" label="跳转到 https://mint-ui.github.io" is-link to="https://mint-ui.github.io"></mt-cell>
+      <mt-tab-container-item id="job">
+        <div class="page-loadmore-wrapper" ref="wrapper" :style="{ height: wrapperHeight + 'px' }">
+          <mt-loadmore :bottom-method="loadBottom" @bottom-status-change="handleBottomChange" :bottom-all-loaded="allLoaded" ref="loadmore_job">
+            <mt-cell v-for="topic in topics" :key="topic" is-link :to="{ name: 'Detail',params:{id:topic.id} }">
+              <div class="cell-content">
+                <h4 class="cell-content-title">{{topic.author.loginname}}:</h4>
+                <div class="cell-content-summary">
+                  {{topic.title}}
+                </div>
+                <div class="cell-content-footer">发布于: {{topic.create_at_forread}} 点击: {{topic.visit_count}} 回复: {{topic.reply_count}}</div>
+              </div>
+              <img slot="icon" :src="topic.author.avatar_url" width="50" height="50">
+            </mt-cell>
+          </mt-loadmore>
+        </div>
       </mt-tab-container-item>
     </mt-tab-container>
   </div>
 </template>
 <style>
+.page-loadmore-wrapper {
+  margin-top: -1px;
+  overflow: scroll;
+}
+
+.mint-cell-title {
+  width: 50px;
+}
+
+.mint-cell-value.is-link {
+  min-width: 80%;
+}
+
 .cell-content {
   margin-left: 10px;
+  min-width: 100%;
 }
 
 .cell-content-title {
@@ -50,6 +120,7 @@
 }
 
 .cell-content-summary {
+  width: 100%;
   font-size: 12px;
   text-indent: 24px;
   margin: 2px
@@ -61,44 +132,64 @@ export default {
   name: 'page-navbar',
   data() {
     return {
-      page: 1,
+      page: 0,
       limit: 15,
       key: '',
+      allLoaded: false,
+      bottomStatus: '',
+      wrapperHeight: 0,
       topics: [],
+      tab: '',
       tabs: [
         {
-          id: '0',
+          id: '',
           name: '全部'
         },
         {
-          id: '1',
+          id: 'ask',
           name: '问答'
         },
         {
-          id: '2',
+          id: 'news',
           name: '新闻'
         }, {
-          id: '3',
+          id: 'share',
           name: '分享'
         }, {
-          id: '4',
+          id: 'job',
           name: '招聘'
         }
       ],
-      selected: '0'
     };
   },
+  watch: {
+    tab() {
+      this.page = 1;
+      this.loadTopics();
+    }
+  },
   methods: {
-    loadMore() {
-      this.loading = true;
-      console.log('loading')
-      setTimeout(() => {
-        this.loading = false;
-      }, 2500);
+    handleBottomChange(status) {
+      this.bottomStatus = status;
+    },
+    loadTopics() {
+      this.get('/qa/topic?page=' + this.page + '&tab=' + this.tab, result => {
+        this.topics = result.data.topics.data;
+      })
+    },
+    loadBottom() {
+      this.page++;
+      this.get('/qa/topic?page=' + this.page + '&tab=' + this.tab, result => {
+        result.data.topics.data.forEach(item=>{
+          this.topics.push(item);
+        })
+        this.$refs['loadmore_' + this.tab].onBottomLoaded();
+      })
     }
   },
   mounted() {
-
+    this.wrapperHeight = document.documentElement.clientHeight - this.$refs.wrapper.getBoundingClientRect().top;
+    this.loadTopics();
   }
 };
 </script>
