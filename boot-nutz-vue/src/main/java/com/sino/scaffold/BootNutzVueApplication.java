@@ -244,6 +244,7 @@ public class BootNutzVueApplication extends WebMvcConfigurerAdapter {
 
 		@Override
 		public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
 			String code = request.getParameter("code");
 			if (Strings.isBlank(code)) {// 没有code参数
 				return true;
@@ -285,7 +286,7 @@ public class BootNutzVueApplication extends WebMvcConfigurerAdapter {
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(qaUserCheckInterceptor()).addPathPatterns("/qa/**");//
+		// registry.addInterceptor(qaUserCheckInterceptor()).addPathPatterns("/qa/**");//
 		// qa用户检测
 		registry.addInterceptor(qaUserInjectInterceptor()).addPathPatterns("/qa/**");// qa用户注入
 	}
