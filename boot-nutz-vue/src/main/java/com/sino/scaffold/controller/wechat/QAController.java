@@ -58,7 +58,7 @@ public class QAController extends BaseController {
 			@RequestParam(value = "tab", required = false) @ApiParam("分类") String tab,
 			@RequestParam(value = "tag", required = false) @ApiParam("标签") String tag,
 			@RequestParam(value = "search", required = false) @ApiParam("关键词") String search,
-			@RequestParam(value = "limit", defaultValue = "15") @ApiParam("页面大小") int limit) {
+			@RequestParam(value = "limit", defaultValue = "5") @ApiParam("页面大小") int limit) {
 		String topicApi = "https://nutz.cn/yvr/api/v1/topics?page=" + page + "&limit=" + limit;
 		if (Strings.isNotBlank(tab)) {
 			topicApi += "&tab=" + tab;
@@ -88,10 +88,13 @@ public class QAController extends BaseController {
 	 */
 	@GetMapping("detail/{id}")
 	@ApiOperation("帖子详情")
-	public Result detail(@PathVariable("id") @ApiParam("帖子id") String id, @SessionAttribute(BootNutzVueApplication.NUTZ_USER_KEY) Nutzer nutzer) {
+	public Result detail(@PathVariable("id") @ApiParam("帖子id") String id
+	// , @SessionAttribute(BootNutzVueApplication.NUTZ_USER_KEY) Nutzer nutzer
+	) {
 		return Result.success()
-				.addData("topic", Json.fromJson(Http.get("https://nutz.cn/yvr/api/v1/topic/" + id).getContent()))
-				.addData("reply", nutzer != null && Strings.isNotBlank(nutzer.getAccessToken()));
+				.addData("topic", Json.fromJson(Http.get("https://nutz.cn/yvr/api/v1/topic/" + id).getContent()));
+		// .addData("reply", nutzer != null &&
+		// Strings.isNotBlank(nutzer.getAccessToken()));
 	}
 
 	/**
