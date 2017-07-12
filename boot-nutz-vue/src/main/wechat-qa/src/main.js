@@ -6,6 +6,10 @@ import VueRouter from 'vue-router'
 import App from './App'
 import router from './router'
 import axios from 'axios';
+import { WechatPlugin } from 'vux'
+import { ToastPlugin } from 'vux'
+Vue.use(ToastPlugin)
+Vue.use(WechatPlugin)
 
 Vue.config.productionTip = false
 
@@ -18,9 +22,8 @@ Vue.prototype.requestFail = function(error, message) {
     }
     if (error.response) {
         message({
-            showClose: true,
-            message: '请求错误,状态码: ' + error.response.status,
-            type: 'error'
+            text: '请求错误,状态码: ' + error.response.status,
+            type: 'warn'
         });
     } else {
         console.log('Error', error.message);
@@ -28,14 +31,13 @@ Vue.prototype.requestFail = function(error, message) {
     console.log(error.config);
 }
 Vue.prototype.bizFail = function(reason) {
-    this.$message({
-        showClose: true,
-        message: '业务错误,错误原因:' + reason,
-        type: 'error'
-    });
+    this.$vux.toast.show({
+        text: '业务错误,错误原因:' + reason,
+        type: 'warn'
+    })
 }
 Vue.prototype.get = function(url, success, bizFail) { //全局get请求函数
-    const message = this.$message;
+    const message = this.$vux.toast;
     const error = this.requestFail;
     axios.get(baseUrl + url).then(resp => {
         console.log(resp)
@@ -49,7 +51,7 @@ Vue.prototype.get = function(url, success, bizFail) { //全局get请求函数
     });
 }
 Vue.prototype.postBody = function(url, body, success, bizFail) { //全局post请求函数
-    const message = this.$message;
+    const message = this.$vux.toast;
     const error = this.requestFail;
     axios.post(baseUrl + url, body)
         .then(resp => {
@@ -64,7 +66,7 @@ Vue.prototype.postBody = function(url, body, success, bizFail) { //全局post请
         });
 }
 Vue.prototype.postForm = function(url, body, success, bizFail) { //全局post请求函数
-    const message = this.$message;
+    const message = this.$vux.toast;
     const error = this.requestFail;
     var params = new URLSearchParams();
     for (var key in body) {
@@ -83,7 +85,7 @@ Vue.prototype.postForm = function(url, body, success, bizFail) { //全局post请
         });
 }
 Vue.prototype.upload = function(url, body, success, bizFail) { //全局文件上传请求函数
-    const message = this.$message;
+    const message = this.$vux.toast;
     const error = this.requestFail;
     var params = new FormData();
     for (var key in body) {
@@ -113,5 +115,18 @@ Vue.config.productionTip = false
 /* eslint-disable no-new */
 new Vue({
     router,
+    created() {
+        this.postForm('/config', {
+            url: location.href.split('#')[0]
+        }, result => {
+            Vue.wechat.config(result.data.config);
+            Vue.wechat.error(function(res) {
+                console.log(res);
+            });
+            Vue.wechat.ready(function() {
+                console.log('wechat config success...');
+            });
+        })
+    },
     render: h => h(App)
 }).$mount('#app-box')

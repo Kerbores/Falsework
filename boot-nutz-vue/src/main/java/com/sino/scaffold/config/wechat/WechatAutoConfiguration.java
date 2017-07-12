@@ -1,7 +1,9 @@
 package com.sino.scaffold.config.wechat;
 
 import org.nutz.json.Json;
+import org.nutz.lang.Lang;
 import org.nutz.lang.Strings;
+import org.nutz.lang.util.NutMap;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
 import org.nutz.weixin.at.WxAccessToken;
@@ -31,6 +33,11 @@ public class WechatAutoConfiguration {
 	RedisTemplate<String, String> template;
 
 	Log log = Logs.get();
+
+	@Bean
+	public WechatJsSDKConfiger jsConfiger() {
+		return new WechatJsSDKConfiger();
+	}
 
 	@Bean(name = "wxapi")
 	public WxApi2Impl api() {
@@ -90,7 +97,8 @@ public class WechatAutoConfiguration {
 			if (Strings.isBlank(info)) {
 				return null;
 			}
-			return Json.fromJson(WxJsapiTicket.class, info);
+			NutMap map = Lang.map(info);
+			return new WxJsapiTicket(map.getString("ticket"), map.getInt("expires"), map.getLong("lastCacheTimeMillis"));
 		}
 
 		/*

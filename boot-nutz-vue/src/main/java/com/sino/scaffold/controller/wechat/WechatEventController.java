@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -26,7 +27,9 @@ import org.nutz.weixin.util.Wxs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.View;
@@ -35,6 +38,7 @@ import com.google.common.collect.Lists;
 import com.sino.scaffold.BootNutzVueApplication;
 import com.sino.scaffold.bean.qa.Nutzer;
 import com.sino.scaffold.config.wechat.NutzViewWrapper;
+import com.sino.scaffold.config.wechat.WechatJsSDKConfiger;
 import com.sino.scaffold.controller.base.BaseController;
 import com.sino.scaffold.service.qa.NutzerService;
 import com.sino.scaffold.utils.Result;
@@ -53,6 +57,9 @@ public class WechatEventController extends BaseController {
 
 	@Autowired
 	NutzerService nutzerService;
+
+	@Autowired
+	WechatJsSDKConfiger wechatJsSDKConfiger;
 
 	{
 		Wxs.enableDevMode();
@@ -108,11 +115,25 @@ public class WechatEventController extends BaseController {
 		}
 	};
 
+	/**
+	 * 微信继而验证和消息回调
+	 * 
+	 * @param key
+	 * @param req
+	 * @return
+	 * @throws IOException
+	 */
 	@RequestMapping(value = { "wechat", "wechat/?" })
 	public View msgIn(String key, HttpServletRequest req) throws IOException {
 		return new NutzViewWrapper(Wxs.handle(wxHandler, req, key));
 	}
 
+	/**
+	 * 创建菜单
+	 * 
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
 	@GetMapping("menu")
 	public @ResponseBody Result menu() throws UnsupportedEncodingException {
 		List<WxMenu> menus = Lists.newArrayList();
@@ -129,6 +150,27 @@ public class WechatEventController extends BaseController {
 		return Result.success();
 	}
 
+	/**
+	 * 获取 jssdk 配置
+	 * 
+	 * @param url
+	 * @return
+	 * @throws ExecutionException
+	 */
+	@PostMapping("config")
+	@ApiOperation("获取 JSSDK 配置")
+	public @ResponseBody Result config(@RequestParam("url") String url) throws ExecutionException {
+		logger.debug(url);
+		return Result.success().addData("config", wechatJsSDKConfiger.getConfig(url));
+	}
+
+	/**
+	 * 用户绑定
+	 * 
+	 * @param token
+	 * @param nutzer
+	 * @return
+	 */
 	@GetMapping("bind")
 	@ApiOperation("绑定用户")
 	public @ResponseBody Result bind(@Param("token") String token, @SessionAttribute(BootNutzVueApplication.NUTZ_USER_KEY) Nutzer nutzer) {

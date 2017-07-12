@@ -115,7 +115,7 @@ export default {
         this.list = [];
         this.$refs.scroller.reset({ top: 0 });
       }
-      this.get('/qa/topic?code='+this.getQueryString('code')+'&page=' + this.page + '&tab=' + this.tab + '&search=' + this.key, result => {
+      this.get('/qa/topic?code=' + this.getQueryString('code') + '&page=' + this.page + '&tab=' + this.tab + '&search=' + this.key, result => {
         result.data.topics.data.forEach(item => {
           this.list.push({
             src: item.author.avatar_url,
