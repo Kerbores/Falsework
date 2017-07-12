@@ -242,9 +242,20 @@ public class BootNutzVueApplication extends WebMvcConfigurerAdapter {
 
 		Log log = Logs.get();
 
+		public boolean isDebug(HttpServletRequest request) {
+			String serverName = request.getServerName();
+			return Strings.equalsIgnoreCase("wdhlzd.ngrok.wendal.cn", serverName)
+					|| Strings.equalsIgnoreCase("127.0.0.1", serverName)
+					|| Strings.equalsIgnoreCase("localhost", serverName);
+		}
+
 		@Override
 		public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
+			if (isDebug(request)) {
+				request.getSession().setAttribute("openid", "otOKDvwEbkaeI8MewpbAFWonrCp0");
+				request.getSession().setAttribute(BootNutzVueApplication.NUTZ_USER_KEY, nutzerService.fetch(Cnd.where("openid", "=", "otOKDvwEbkaeI8MewpbAFWonrCp0")));
+				return true;
+			}
 			String code = request.getParameter("code");
 			if (Strings.isBlank(code)) {// 没有code参数
 				return true;
