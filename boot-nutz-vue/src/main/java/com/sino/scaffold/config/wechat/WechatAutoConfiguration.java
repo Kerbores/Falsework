@@ -1,12 +1,13 @@
 package com.sino.scaffold.config.wechat;
 
 import org.nutz.json.Json;
+import org.nutz.lang.Strings;
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
 import org.nutz.weixin.at.WxAccessToken;
 import org.nutz.weixin.at.WxJsapiTicket;
-import org.nutz.weixin.at.impl.CacheableAccessTokenStore;
 import org.nutz.weixin.impl.WxApi2Impl;
+import org.nutz.weixin.spi.WxAccessTokenStore;
 import org.nutz.weixin.spi.WxJsapiTicketStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -85,7 +86,11 @@ public class WechatAutoConfiguration {
 		@Override
 		public WxJsapiTicket get() {
 			log.debug("load access ticket...");
-			return Json.fromJson(WxJsapiTicket.class, template.opsForValue().get(tokenKey));
+			String info = template.opsForValue().get(tokenKey);
+			if (Strings.isBlank(info)) {
+				return null;
+			}
+			return Json.fromJson(WxJsapiTicket.class, info);
 		}
 
 		/*
@@ -107,7 +112,7 @@ public class WechatAutoConfiguration {
 	 * @author kerbores
 	 *
 	 */
-	public static class AccessTokenStore extends CacheableAccessTokenStore {
+	public static class AccessTokenStore implements WxAccessTokenStore {
 
 		private String tokenKey = "WX_AT_TOKEN";
 
@@ -135,25 +140,27 @@ public class WechatAutoConfiguration {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see org.nutz.weixin.at.impl.CacheableAccessTokenStore#_getAccessToken()
+		 * @see org.nutz.weixin.spi.WxAccessTokenStore#get()
 		 */
 		@Override
-		protected WxAccessToken _getAccessToken() {
+		public WxAccessToken get() {
 			log.debug("load access token...");
-			return Json.fromJson(WxAccessToken.class, template.opsForValue().get(tokenKey));
+			String info = template.opsForValue().get(tokenKey);
+			if (Strings.isBlank(info)) {
+				return null;
+			}
+			return Json.fromJson(WxAccessToken.class, info);
 		}
 
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * org.nutz.weixin.at.impl.CacheableAccessTokenStore#_saveAccessToken(java.lang.
-		 * String, int)
+		 * @see org.nutz.weixin.spi.WxAccessTokenStore#save(java.lang.String, int, long)
 		 */
 		@Override
-		protected void _saveAccessToken(String token, int time) {
+		public void save(String token, int expires, long lastCacheTimeMillis) {
 			log.debugf("cache access token: %s", token);
-			template.opsForValue().set(tokenKey, Json.toJson(new WxAccessToken(token, time, System.currentTimeMillis())));
+			template.opsForValue().set(tokenKey, Json.toJson(new WxAccessToken(token, expires, lastCacheTimeMillis)));
 		}
 
 	}

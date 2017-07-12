@@ -15,7 +15,7 @@
             </div>
             <div class="weui-media-box__bd">
               <h4 class="weui-media-box__title">{{reply.title}}</h4>
-              <p class="weui-media-box__desc" v-html="reply.desc"></p>
+              <p class="weui-media-box__desc1" v-html="reply.desc"></p>
             </div>
           </div>
           <ul class="weui-media-box__info">
@@ -78,10 +78,20 @@ export default {
 </script>
 
 <style>
-img{
+.weui-media-box__desc1 {
+  color: #999999;
+  line-height: 1.2;
+  overflow: scroll;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 0;
+}
+
+img {
   width: auto;
   max-width: 100%
 }
+
 .card-padding {
   padding: 15px;
   font-size: 12px;

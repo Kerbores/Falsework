@@ -61,6 +61,7 @@ public class NutzViewWrapper implements View {
 	 */
 	@Override
 	public void render(Map<String, ?> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		response.setCharacterEncoding("UTF8");
 		try {
 			view.render(request, response, model);
 		} catch (Throwable e) {

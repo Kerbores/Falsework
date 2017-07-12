@@ -64,10 +64,10 @@ public class QAController extends BaseController {
 			topicApi += "&tab=" + tab;
 		}
 		if (Strings.isNotBlank(tag)) {
-			topicApi += "&tab=" + tag;
+			topicApi += "&tag=" + tag;
 		}
 		if (Strings.isNotBlank(search)) {
-			topicApi += "&tab=" + search;
+			topicApi += "&search=" + search;
 		}
 		return Result.success()
 				.addData("topics", Json.fromJson(Http.get(topicApi).getContent()))

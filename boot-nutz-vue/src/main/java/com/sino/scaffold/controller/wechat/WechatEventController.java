@@ -1,6 +1,9 @@
 package com.sino.scaffold.controller.wechat;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,6 +14,7 @@ import org.nutz.lang.Lang;
 import org.nutz.lang.util.NutMap;
 import org.nutz.mvc.annotation.Param;
 import org.nutz.weixin.bean.WxInMsg;
+import org.nutz.weixin.bean.WxMenu;
 import org.nutz.weixin.bean.WxOutMsg;
 import org.nutz.weixin.impl.AbstractWxHandler;
 import org.nutz.weixin.impl.WxApi2Impl;
@@ -27,6 +31,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.View;
 
+import com.google.common.collect.Lists;
 import com.sino.scaffold.BootNutzVueApplication;
 import com.sino.scaffold.bean.qa.Nutzer;
 import com.sino.scaffold.config.wechat.NutzViewWrapper;
@@ -106,6 +111,22 @@ public class WechatEventController extends BaseController {
 	@RequestMapping(value = { "wechat", "wechat/?" })
 	public View msgIn(String key, HttpServletRequest req) throws IOException {
 		return new NutzViewWrapper(Wxs.handle(wxHandler, req, key));
+	}
+
+	@GetMapping("menu")
+	public @ResponseBody Result menu() throws UnsupportedEncodingException {
+		List<WxMenu> menus = Lists.newArrayList();
+		WxMenu menu = new WxMenu();
+		menu.setType("view");
+		menu.setName("测试");
+		menu.setUrl(String.format(
+				"https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect",
+				api.getAppid(),
+				URLEncoder.encode("http://kerbores.ngrok.wendal.cn/", "UTF8")));
+		menu.setSubButtons(Lists.newArrayList());
+		menus.add(menu);
+		api.menu_create(menus);
+		return Result.success();
 	}
 
 	@GetMapping("bind")
