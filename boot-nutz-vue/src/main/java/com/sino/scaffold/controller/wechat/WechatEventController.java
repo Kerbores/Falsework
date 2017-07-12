@@ -9,11 +9,6 @@ import java.util.concurrent.ExecutionException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.nutz.dao.Cnd;
-import org.nutz.http.Http;
-import org.nutz.http.Response;
-import org.nutz.lang.Lang;
-import org.nutz.lang.util.NutMap;
-import org.nutz.mvc.annotation.Param;
 import org.nutz.weixin.bean.WxInMsg;
 import org.nutz.weixin.bean.WxMenu;
 import org.nutz.weixin.bean.WxOutMsg;
@@ -31,11 +26,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.View;
 
 import com.google.common.collect.Lists;
-import com.sino.scaffold.BootNutzVueApplication;
 import com.sino.scaffold.bean.qa.Nutzer;
 import com.sino.scaffold.config.wechat.NutzViewWrapper;
 import com.sino.scaffold.config.wechat.WechatJsSDKConfiger;
@@ -137,15 +130,35 @@ public class WechatEventController extends BaseController {
 	@GetMapping("menu")
 	public @ResponseBody Result menu() throws UnsupportedEncodingException {
 		List<WxMenu> menus = Lists.newArrayList();
-		WxMenu menu = new WxMenu();
-		menu.setType("view");
-		menu.setName("测试");
-		menu.setUrl(String.format(
+		WxMenu list = new WxMenu();
+		list.setType("view");
+		list.setName("话题列表");
+		list.setUrl(String.format(
 				"https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect",
 				api.getAppid(),
 				URLEncoder.encode("http://kerbores.ngrok.wendal.cn/", "UTF8")));
-		menu.setSubButtons(Lists.newArrayList());
-		menus.add(menu);
+		list.setSubButtons(Lists.newArrayList());
+
+		WxMenu add = new WxMenu();
+		add.setType("view");
+		add.setName("我要提问");
+		add.setUrl(String.format(
+				"https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect",
+				api.getAppid(),
+				URLEncoder.encode("http://kerbores.ngrok.wendal.cn/#/add", "UTF8")));
+		add.setSubButtons(Lists.newArrayList());
+
+		WxMenu me = new WxMenu();
+		me.setType("view");
+		me.setName("我的信息");
+		me.setUrl(String.format(
+				"https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect",
+				api.getAppid(),
+				URLEncoder.encode("http://kerbores.ngrok.wendal.cn/#/me", "UTF8")));
+		me.setSubButtons(Lists.newArrayList());
+		menus.add(list);
+		menus.add(add);
+		menus.add(me);
 		api.menu_create(menus);
 		return Result.success();
 	}
@@ -164,30 +177,4 @@ public class WechatEventController extends BaseController {
 		return Result.success().addData("config", wechatJsSDKConfiger.getConfig(url));
 	}
 
-	/**
-	 * 用户绑定
-	 * 
-	 * @param token
-	 * @param nutzer
-	 * @return
-	 */
-	@GetMapping("bind")
-	@ApiOperation("绑定用户")
-	public @ResponseBody Result bind(@Param("token") String token, @SessionAttribute(BootNutzVueApplication.NUTZ_USER_KEY) Nutzer nutzer) {
-		Response response = Http.post2("https://nutz.cn/yvr/api/v1/accesstoken", NutMap.NEW().addv("accesstoken", token), 5000);
-		if (response.isOK()) {
-			NutMap data = Lang.map(response.getContent());
-			if (data.getBoolean("success")) {
-				// 更新信息到NUTZER
-				Response r1 = Http.get("https://nutz.cn/yvr/api/v1/user/" + data.getString("loginname"));
-				NutMap userInfo = Lang.map(r1.getContent());
-				nutzer.setAccessToken(token);
-				nutzer.setLoginName(userInfo.getAs("data", NutMap.class).getString("loginname"));
-				nutzer.setAvatarUrl(userInfo.getAs("data", NutMap.class).getString("avatar_url"));
-				nutzerService.update(nutzer);
-			}
-			return Result.success().addData(data);
-		}
-		return Result.fail("token不正确!");
-	}
 }

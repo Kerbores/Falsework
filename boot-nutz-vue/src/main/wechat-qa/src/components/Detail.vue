@@ -1,6 +1,5 @@
 <template>
   <div>
-    <x-header>帖子详情</x-header>
     <group :title="topic.title">
       <card>
         <div slot="content" class="card-padding" v-html="topic.content"></div>
@@ -72,6 +71,7 @@ export default {
     this.id = this.$route.params.id;
   },
   mounted() {
+    document.title = '帖子详情';
     this.loadTopic();
   }
 }

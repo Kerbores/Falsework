@@ -115,7 +115,7 @@ Vue.config.productionTip = false
 /* eslint-disable no-new */
 new Vue({
     router,
-    created() {
+    mounted() {
         this.postForm('/config', {
             url: location.href.split('#')[0]
         }, result => {

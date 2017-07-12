@@ -25,9 +25,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.core.MethodParameter;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.context.request.async.DeferredResult;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -196,11 +199,21 @@ public class BootNutzVueApplication extends WebMvcConfigurerAdapter {
 
 		@Override
 		public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-			if (!bindedUser(request)) {
+			HandlerMethod method = (HandlerMethod) handler;
+			if (!bindedUser(request) && needSession(method)) {
 				response.setStatus(401);
 				return false;
 			}
 			return true;
+		}
+
+		private boolean needSession(HandlerMethod method) {
+			for (MethodParameter parameter : method.getMethodParameters()) {
+				if (parameter.getParameterAnnotation(SessionAttribute.class) != null) {
+					return true;
+				}
+			}
+			return false;
 		}
 
 		/**
@@ -244,7 +257,7 @@ public class BootNutzVueApplication extends WebMvcConfigurerAdapter {
 
 		public boolean isDebug(HttpServletRequest request) {
 			String serverName = request.getServerName();
-			return Strings.equalsIgnoreCase("wdhlzd.ngrok.wendal.cn", serverName)
+			return Strings.equalsIgnoreCase("kerbores.ngrok.wendal.cn", serverName)
 					|| Strings.equalsIgnoreCase("127.0.0.1", serverName)
 					|| Strings.equalsIgnoreCase("localhost", serverName);
 		}
@@ -254,7 +267,7 @@ public class BootNutzVueApplication extends WebMvcConfigurerAdapter {
 			if (isDebug(request)) {
 				request.getSession().setAttribute("openid", "otOKDvwEbkaeI8MewpbAFWonrCp0");
 				request.getSession().setAttribute(BootNutzVueApplication.NUTZ_USER_KEY, nutzerService.fetch(Cnd.where("openid", "=", "otOKDvwEbkaeI8MewpbAFWonrCp0")));
-				return true;
+				// 继续尝试是否可真实获取
 			}
 			String code = request.getParameter("code");
 			if (Strings.isBlank(code)) {// 没有code参数

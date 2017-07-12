@@ -1,11 +1,5 @@
 <template>
   <div>
-    <x-header :left-options="{showBack: false}" title="slot:overwrite-title">帖子列表
-      <div slot="right" @click="searchClick">
-        <x-icon type="ios-search-strong" size="20"></x-icon>
-      </div>
-    </x-header>
-    <search v-model="key" position="absolute" auto-scroll-to-top top="46px" @on-submit="onSubmit" ref="search" v-show="search"></search>
     <group>
       <button-tab v-model="tabIndex">
         <button-tab-item v-for="tab in tabs" :key="tab" @on-item-click="changeTab()"> {{tab.name}} </button-tab-item>
@@ -67,12 +61,12 @@ export default {
         }, {
           id: 'job',
           name: '招聘'
+        },
+         {
+          id: 'nb',
+          name: '灌水'
         }
-      ],
-      footer: {
-        title: '查看更多',
-        url: 'http://vux.li'
-      }
+      ]
     }
   },
   methods: {
@@ -140,6 +134,7 @@ export default {
     },
   },
   mounted() {
+    document.title = '帖子列表';
     this.height = (document.documentElement.clientHeight - 100) + 'px';
     this.loadTopics();
   }
