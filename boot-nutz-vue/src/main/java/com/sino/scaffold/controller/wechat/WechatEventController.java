@@ -36,13 +36,17 @@ import com.sino.scaffold.controller.base.BaseController;
 import com.sino.scaffold.service.qa.NutzerService;
 import com.sino.scaffold.utils.Result;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @author kerbores
  *
  */
 @Controller
+@Api(value = "Wechat", tags = { "微信接入" })
 public class WechatEventController extends BaseController {
 
 	@Autowired
@@ -117,6 +121,7 @@ public class WechatEventController extends BaseController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = { "wechat", "wechat/?" })
+	@ApiIgnore
 	public View msgIn(String key, HttpServletRequest req) throws IOException {
 		return new NutzViewWrapper(Wxs.handle(wxHandler, req, key));
 	}
@@ -128,6 +133,7 @@ public class WechatEventController extends BaseController {
 	 * @throws UnsupportedEncodingException
 	 */
 	@GetMapping("menu")
+	@ApiOperation("创建菜单")
 	public @ResponseBody Result menu() throws UnsupportedEncodingException {
 		List<WxMenu> menus = Lists.newArrayList();
 		WxMenu list = new WxMenu();
@@ -172,8 +178,7 @@ public class WechatEventController extends BaseController {
 	 */
 	@PostMapping("config")
 	@ApiOperation("获取 JSSDK 配置")
-	public @ResponseBody Result config(@RequestParam("url") String url) throws ExecutionException {
-		logger.debug(url);
+	public @ResponseBody Result config(@RequestParam("url") @ApiParam("网页地址") String url) throws ExecutionException {
 		return Result.success().addData("config", wechatJsSDKConfiger.getConfig(url));
 	}
 
