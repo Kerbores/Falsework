@@ -120,6 +120,11 @@
 			<artifactId>nutzwx</artifactId>
 			<version>1.r.62-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>com.lowagie</groupId>
+			<artifactId>itext</artifactId>
+			<version>2.1.7</version>
+		</dependency>
 	</dependencies>
 
 	<build>
