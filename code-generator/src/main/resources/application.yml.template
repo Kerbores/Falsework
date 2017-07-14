@@ -1,0 +1,59 @@
+spring:
+  application:
+    name: ${project.name}
+    version: ${project.version}
+  redis:
+    host: 127.0.0.1
+    port: 6379
+  datasource:
+    druid:
+      url: ${project.dataBase.JDBCUrl}
+      username: ${project.dataBase.user}
+      password: ${project.dataBase.password}
+      driver-class-name: ${project.dataBase.type.driverClass}
+      filters: stat,wall,log4j
+      initialSize: 10
+      minIdle: 1
+      maxActive: 50
+      maxWait: 60000
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: SELECT 'sino soft'
+      testWhileIdle: true
+      testOnBorrow: true
+      testOnReturn: false
+      poolPreparedStatements: true
+      maxPoolPreparedStatementPerConnectionSize: 20
+      web-stat-filter:
+        enabled: true
+        url-pattern: /*
+        exclusions: /druid/*,*.js,*.gif,*.jpg,*.png,*.css,*.ico
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        resetEnable: true
+management:
+  security:
+    enabled: false
+server:
+  port: 8080
+logging:
+  level:
+    org.nutz: DEBUG
+    ${project.group}: DEBUG
+nutz:
+  dao:
+    runtime:
+      add-column: true
+      basepackage: 
+      - ${project.group}.${project.name}.bean
+      check-index: true
+      create: true
+      delete-column: true
+      foce-create: false
+      migration: true
+    sqlmanager:
+      paths:
+      - sqls
+  json:
+    mode: compact
