@@ -15,6 +15,7 @@ target/
 .settings/
 .classpath
 .project
+.factorypath
 
 .gitkeep
 .vscode-upload.json
