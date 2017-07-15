@@ -24,8 +24,8 @@ import io.swagger.annotations.ApiParam;
  *
  */
 @RestController
-@RequestMapping("${table.className!}")
-@Api(value = "${table.className!}", tags = { "${table.remarks!}模块" })
+@RequestMapping("${table.lowerClassName!}")
+@Api(value = "${table.className!}", tags = { "${has(table.remarks) ? table.remarks : table.className }模块" })
 public class ${table.className!}Controller extends BaseController {
 	@Autowired
 	${table.className!}Service ${table.lowerClassName!}Service;

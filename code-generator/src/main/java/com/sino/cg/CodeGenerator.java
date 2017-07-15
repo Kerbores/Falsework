@@ -37,16 +37,16 @@ public class CodeGenerator {
 
 		Project project = new Project();
 		project.setDescription("测试一下");
-		project.setGroup("com.sino");
-		project.setHome("~/cg/test");
-		project.setName("test");
+		project.setGroup("com.sino.cg");
+		project.setHome("~/cc/sso");
+		project.setName("sso");
 		project.setVersion("1.0");
 		DataBase dataBase = new DataBase();
 		dataBase.setType(Dialect.MYSQL);
 		dataBase.setDbAddress("127.0.0.1");
 		dataBase.setPassword("123456");
 		dataBase.setPort(3306);
-		dataBase.setSchame("spring-thunder");
+		dataBase.setSchame("test");
 		dataBase.setUser("root");
 		project.setDataBase(dataBase);
 		loadTeamplate();
