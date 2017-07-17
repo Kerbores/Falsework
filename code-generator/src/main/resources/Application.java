@@ -39,9 +39,9 @@ public class ${project.upperedName}Application {
 	}
 
 	private ApiInfo apiInfo() {
-		return new ApiInfoBuilder().title("F")
-				.description("接口手册")// 详细描述
-				.version("1.0")// 版本
+		return new ApiInfoBuilder().title("${project.name!}")
+				.description("${project.description!}")// 详细描述
+				.version("${project.version!}")// 版本
 				.termsOfServiceUrl("http://www.sinosoft.com.cn")
 				.contact(new Contact("王贵源", "http://www.sinosoft.com.cn", "wangguiyuan@sinosoft.com.cn"))// 作者
 				.license("The Apache License, Version 2.0")

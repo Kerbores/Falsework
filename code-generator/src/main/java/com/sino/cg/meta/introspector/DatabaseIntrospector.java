@@ -13,8 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.nutz.log.Logs;
-
 import com.sino.cg.meta.DatabaseConfig;
 import com.sino.cg.meta.FullyQualifiedJavaType;
 import com.sino.cg.meta.IntrospectedColumn;
@@ -396,9 +394,6 @@ public class DatabaseIntrospector {
 		ResultSet rs = dbMetadataUtils.getDatabaseMetaData().getTables(config.getCatalog(), config.getSchemaPattern(), config.getTableNamePattern(), null);
 		Map<String, String> answer = new HashMap<String, String>();
 		while (rs.next()) {
-			for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
-				Logs.get().debugf("tables mates %s ===> %s", rs.getMetaData().getColumnLabel(i + 1), rs.getObject(i + 1));
-			}
 			answer.put(rs.getString("TABLE_NAME"), rs.getString("REMARKS"));
 		}
 		closeResultSet(rs);

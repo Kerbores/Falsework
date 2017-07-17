@@ -26,8 +26,7 @@ import io.swagger.annotations.ApiParam;
 @RestController
 @RequestMapping("${table.lowerJavaClassName!}")
 @Api(value = "${table.javaClassName!}", tags = { "${has(table.remarks) ? table.remarks : table.javaClassName }模块" })
-public class $ {
-	table.javaClassName!}Controller extends BaseController{@Autowired ${table.javaClassName!}Service ${table.lowerJavaClassName!}Service;
+public class ${table.javaClassName!}Controller extends BaseController{@Autowired ${table.javaClassName!}Service ${table.lowerJavaClassName!}Service;
 
 	/**
 	 * ${table.remarks!}列表
@@ -65,7 +64,7 @@ public class $ {
 	 */
 	@PostMapping("add")
 	@ApiOperation("添加${table.remarks!}")
-	public Result save(@RequestBody ${table.javaClassName!}${table.lowerJavaClassName!})
+	public Result save(@RequestBody ${table.javaClassName!} ${table.lowerJavaClassName!})
 	{
 		return ${table.lowerJavaClassName!}Service.save(${table.lowerJavaClassName!}) == null ? Result.fail("保存${table.remarks!}失败!") : Result.success().addData("${table.lowerJavaClassName!}", ${table.lowerJavaClassName!});
 	}
@@ -104,7 +103,7 @@ public class $ {
 	 */
 	@PostMapping("edit")
 	@ApiOperation("更新${table.remarks!}")
-	public Result update(@RequestBody ${table.javaClassName!}${table.lowerJavaClassName!})
+	public Result update(@RequestBody ${table.javaClassName!} ${table.lowerJavaClassName!})
 	{
 		return ${table.lowerJavaClassName!}Service.updateIgnoreNull(${table.lowerJavaClassName!}) != 1 ? Result.fail("更新${table.remarks!}失败!") : Result.success().addData("${table.lowerJavaClassName!}", ${table.lowerJavaClassName!});
 	}

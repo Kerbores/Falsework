@@ -9,8 +9,8 @@ import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.Template;
 import org.beetl.core.resource.ClasspathResourceLoader;
-import org.nutz.json.Json;
 import org.nutz.lang.Files;
+import org.nutz.lang.Stopwatch;
 import org.nutz.lang.Strings;
 import org.nutz.log.Logs;
 
@@ -61,6 +61,7 @@ public class CodeGenerator {
 	}
 
 	public static void gen(Project project) throws IOException, SQLException {
+		Stopwatch stopwatch = Stopwatch.begin();
 		Files.clearDir(Files.createDirIfNoExists(project.getHome()));// 清空
 		File pom = Files.createFileIfNoExists(String.format("%s%s", project.getHome(), "/pom.xml"));
 
@@ -131,7 +132,7 @@ public class CodeGenerator {
 		DatabaseConfig config = new DatabaseConfig();
 		List<IntrospectedTable> list = dbMetadataUtils.introspectTables(config);
 		for (IntrospectedTable table : list) {
-			Logs.get().debug(Json.toJson(table));
+			Logs.get().debug("正在生成表 '" + table.getName() + "' 相关代码");
 			// BEAN
 			File modelClass = Files.createFileIfNoExists(String.format("%s%s/%s/%s/%s/%s.java",
 					project.getHome(),
@@ -143,6 +144,7 @@ public class CodeGenerator {
 			Template modelTemplate = gt.getTemplate("Model.java");
 			modelTemplate.binding("project", project);
 			modelTemplate.binding("table", table);
+			Logs.get().debug("正在写入实体文件--> " + table.getJavaClassName() + ".java...");
 			Files.write(modelClass, modelTemplate.render());
 
 			// SERVICE
@@ -156,6 +158,7 @@ public class CodeGenerator {
 			Template serviceTamplate = gt.getTemplate("Service.java");
 			serviceTamplate.binding("project", project);
 			serviceTamplate.binding("table", table);
+			Logs.get().debug("正在写入业务文件--> " + table.getJavaClassName() + "Service.java...");
 			Files.write(serviceClass, serviceTamplate.render());
 
 			// Controller
@@ -169,8 +172,13 @@ public class CodeGenerator {
 			Template controllerTemplate = gt.getTemplate("Controller.java");
 			controllerTemplate.binding("project", project);
 			controllerTemplate.binding("table", table);
+			Logs.get().debug("正在写入控制器文件--> " + table.getJavaClassName() + "Controller.java...");
 			Files.write(controllerClass, controllerTemplate.render());
+			Logs.get().debug("表 '" + table.getName() + "' 相关代码生成完毕");
+			Logs.get().debug(Strings.dup("---------", 10));
 		}
+		stopwatch.stop();
+		Logs.get().debug("代码生成成功!源代码已保存至: " + Files.createDirIfNoExists(project.getHome()).getAbsolutePath() + " 耗时: " + stopwatch.getDuration() + " 毫秒");
 	}
 
 }
