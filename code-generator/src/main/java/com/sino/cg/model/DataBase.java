@@ -2,7 +2,7 @@ package com.sino.cg.model;
 
 import org.nutz.lang.Lang;
 
-import com.github.abel533.database.Dialect;
+import com.sino.cg.meta.Dialect;
 
 /**
  * @author kerbores

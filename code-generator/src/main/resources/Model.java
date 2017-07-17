@@ -16,25 +16,29 @@ import org.nutz.plugin.spring.boot.service.entity.DataBaseEntity;
  * 
  */
 @Table("${table.name}")
-@Comment("${has(table.remarks) ? table.remarks : table.name}")
-public class ${table.className!} extends DataBaseEntity {
+<%if (has(table.remarks)) {%>
+@Comment("${table.remarks}")
+<%}%>
+public class ${table.javaClassName!} extends DataBaseEntity {
 
-	<% for(field in table.fields){ %>
+	<% for(field in table.allColumns){ %>
 		<% if(field.pk! && (field.jdbcTypeName! == 'NUMERIC'|| field.jdbcTypeName! == 'BIGINT' || field.jdbcTypeName! == 'INTEGER' || field.jdbcTypeName! == 'INT')){ %>
 		@Id
 		<% }else if(field.pk){ %>
 		@Name
 		<% } %>
 		@Column("${field.name!}")
-		@Comment("${has(field.remarks) ?field.remarks : field.name}")
-		@ColDefine(width=${field.length!})
-		private ${field.javaName!} ${field.javaProperty!} ;
+		<%if (has(field.remarks)) {%>
+		@Comment("${field.remarks}")
+		<%}%>
+		@ColDefine(width=${field.length!}${field.scale!=0 ? ',precision='+field.scale,''})
+		private ${field.fullyQualifiedJavaType.fullyQualifiedName!} ${field.javaProperty!} ;
 		
-		public ${field.javaName!} get${field.upperjavaProperty!}() {
+		public ${field.fullyQualifiedJavaType.fullyQualifiedName!} get${field.upperjavaProperty!}() {
 			return ${field.javaProperty!};
 		}
 		
-		public void set${field.upperjavaProperty!}(${field.javaName!} ${field.javaProperty!}) {
+		public void set${field.upperjavaProperty!}(${field.fullyQualifiedJavaType.fullyQualifiedName!} ${field.javaProperty!}) {
 			this.${field.javaProperty!} = ${field.javaProperty!};
 		}
 	<% } %>

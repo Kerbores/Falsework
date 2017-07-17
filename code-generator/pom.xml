@@ -6,7 +6,27 @@
 	<version>1.0</version>
 	<name>code-generator</name>
 	<description>代码生成器</description>
-
+	<repositories>
+		<repository>
+			<id>clojars</id>
+			<name>Clojars repository</name>
+			<url>https://clojars.org/repo</url>
+		</repository>
+		<repository>
+			<id>nutz-public</id>
+			<url>http://jfrog.nutz.cn/artifactory/jcenter</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>nutz-snapshots</id>
+			<url>https://jfrog.nutz.cn/artifactory/snapshots</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>org.nutz</groupId>
@@ -19,14 +39,9 @@
 			<version>2.7.19</version>
 		</dependency>
 		<dependency>
-			<groupId>com.github.abel533</groupId>
-			<artifactId>DBMetadata-core</artifactId>
-			<version>0.1.1</version>
-		</dependency>
-		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.37</version>
+			<version>5.1.42</version>
 		</dependency>
 	</dependencies>
 </project>
