@@ -69,7 +69,7 @@ export default {
                 }, {
                     type: 'value',
                     scale: true,
-                    max: 1000,
+                    max: 2500,
                     min: 0,
                     name: ' p/s',
                     boundaryGap: [0.2, 0.2]
