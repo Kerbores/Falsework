@@ -126,6 +126,12 @@ public class WechatEventController extends BaseController {
 		return new NutzViewWrapper(Wxs.handle(wxHandler, req, key));
 	}
 
+	@GetMapping("qr")
+	@ResponseBody
+	public Object name() {
+		return api.qrcode_create(2, 0);
+	}
+
 	/**
 	 * 创建菜单
 	 * 

@@ -34,16 +34,16 @@ public class CodeGenerator {
 
 		Project project = new Project();
 		project.setDescription("测试一下");
-		project.setGroup("com.sino.cg");
-		project.setHome("~/cc/sso");
-		project.setName("sso");
+		project.setGroup("com.sino");
+		project.setHome("/Users/kerbores/git/Sale-Plus/code");
+		project.setName("sale");
 		project.setVersion("1.0");
 		DataBase dataBase = new DataBase();
 		dataBase.setType(Dialect.MYSQL);
 		dataBase.setDbAddress("127.0.0.1");
 		dataBase.setPassword("123456");
 		dataBase.setPort(3306);
-		dataBase.setSchame("test");
+		dataBase.setSchame("sale-plus");
 		dataBase.setUser("root");
 		project.setDataBase(dataBase);
 		loadTeamplate();

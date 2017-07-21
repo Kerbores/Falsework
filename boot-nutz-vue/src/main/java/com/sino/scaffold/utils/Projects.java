@@ -10,6 +10,11 @@ import org.nutz.lang.Files;
  *
  */
 public class Projects {
+
+	public static void main(String[] args) throws IOException {
+		clear("/Users/kerbores/Documents/workspace/sale-plus");
+	}
+
 	public static void clear(String base) throws IOException {
 		Files.cleanAllFolderInSubFolderes(Files.checkFile(base), ".settings");
 		Files.cleanAllFolderInSubFolderes(Files.checkFile(base), "target");
