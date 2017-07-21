@@ -223,7 +223,7 @@
 		<profile>
 			<id>unix</id>
 			<properties>
-				<npm>npm</npm>
+				<npm>cnpm</npm>
 			</properties>
 			<activation>
 				<activeByDefault>true</activeByDefault>
