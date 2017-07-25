@@ -159,6 +159,11 @@
 			<artifactId>axe-apm</artifactId>
 			<version>1.0</version>
 		</dependency>
+		<dependency>
+			<groupId>club.zhcs</groupId>
+			<artifactId>axe-sigar</artifactId>
+			<version>1.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
