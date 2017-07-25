@@ -31,6 +31,7 @@ import com.sino.scaffold.service.acl.UserService;
 import com.sino.scaffold.utils.DES;
 import com.sino.scaffold.utils.Result;
 
+import club.zhcs.captcha.CaptchaView;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -223,7 +224,7 @@ public class UserController extends BaseController {
 	@PostMapping("login")
 	@ApiOperation(value = "用户登录")
 	public Result login(@RequestBody ApiRequest<UserLoginDto> request, @ApiIgnore HttpSession session) {
-		if (Strings.equalsIgnoreCase(request.getData().getCaptcha(), Strings.safeToString(session.getAttribute(BootNutzVueApplication.CAPTCHA_KEY), ""))) {
+		if (Strings.equalsIgnoreCase(request.getData().getCaptcha(), Strings.safeToString(session.getAttribute(CaptchaView.CAPTCHA_SESSION_KEY), ""))) {
 			Result result = shiroUserService.login(request.getData().getUserName(), request.getData().getPassword(), Lang.getIP(request()));
 			if (result.isSuccess()) {
 				// 登录成功处理

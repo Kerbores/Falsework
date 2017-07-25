@@ -145,6 +145,15 @@
 			<artifactId>poi-ooxml</artifactId>
 			<version>3.16</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>club.zhcs</groupId>
+			<artifactId>axe-captcha</artifactId>
+			<version>1.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
