@@ -1,7 +1,5 @@
 package com.sino.scaffold.controller.acl;
 
-import javax.servlet.http.HttpSession;
-
 import org.apache.shiro.SecurityUtils;
 import org.nutz.dao.Cnd;
 import org.nutz.json.Json;
@@ -31,11 +29,11 @@ import com.sino.scaffold.service.acl.UserService;
 import com.sino.scaffold.utils.DES;
 import com.sino.scaffold.utils.Result;
 
+import club.zhcs.apm.APM;
 import club.zhcs.captcha.CaptchaView;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * @author kerbores
@@ -223,8 +221,9 @@ public class UserController extends BaseController {
 	 */
 	@PostMapping("login")
 	@ApiOperation(value = "用户登录")
-	public Result login(@RequestBody ApiRequest<UserLoginDto> request, @ApiIgnore HttpSession session) {
-		if (Strings.equalsIgnoreCase(request.getData().getCaptcha(), Strings.safeToString(session.getAttribute(CaptchaView.CAPTCHA_SESSION_KEY), ""))) {
+	@APM("用户登录")
+	public Result login(@RequestBody ApiRequest<UserLoginDto> request) {
+		if (Strings.equalsIgnoreCase(request.getData().getCaptcha(), _getSessionObj(CaptchaView.CAPTCHA_SESSION_KEY, String.class))) {
 			Result result = shiroUserService.login(request.getData().getUserName(), request.getData().getPassword(), Lang.getIP(request()));
 			if (result.isSuccess()) {
 				// 登录成功处理

@@ -92,6 +92,10 @@ public class BaseController {
 		request.getSession().setAttribute(key, value);
 	}
 
+	protected <T> T _getSessionObj(String key, Class<T> clazz) {
+		return (T) request.getSession().getAttribute(key);
+	}
+
 	public View _renderForward(String path, Object[] objs) {
 		request.setAttribute("objs", objs);
 		return new ForwardView(path);
