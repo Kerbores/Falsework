@@ -40,9 +40,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		<swagger.version>2.7.0</swagger.version>
 		<shiro.version>1.4.0</shiro.version>
 		<destDir>${project.build.outputDirectory}/static/</destDir>
+		<axe.version>1.1</axe.version>
 	</properties>
 
 	<dependencies>
@@ -96,16 +96,6 @@
 
 
 		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-			<version>${swagger.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger-ui</artifactId>
-			<version>${swagger.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
@@ -147,17 +137,22 @@
 		<dependency>
 			<groupId>club.zhcs</groupId>
 			<artifactId>axe-captcha</artifactId>
-			<version>1.0</version>
+			<version>${axe.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>club.zhcs</groupId>
 			<artifactId>axe-apm</artifactId>
-			<version>1.0</version>
+			<version>${axe.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>club.zhcs</groupId>
 			<artifactId>axe-sigar</artifactId>
-			<version>1.0</version>
+			<version>${axe.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>club.zhcs</groupId>
+			<artifactId>axe-swagger</artifactId>
+			<version>${axe.version}</version>
 		</dependency>
 	</dependencies>
 

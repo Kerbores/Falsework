@@ -76,6 +76,9 @@ wechat:
   encoding-aes-key: Kerbores
   redis-cache-enable: true
   token: Kerbores
+swagger:
+  description: sino-staff 接口手册
+  contact-name: 王贵源
 #QIUNIU
 qiniu:
   access-key: 0_2UjuhLU6jbRzmcGjnraA7t4H_lpSVgNX3Ld1uV
