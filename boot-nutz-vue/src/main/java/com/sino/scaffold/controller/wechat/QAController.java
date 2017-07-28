@@ -25,7 +25,7 @@ import com.sino.scaffold.BootNutzVueApplication;
 import com.sino.scaffold.bean.qa.Nutzer;
 import com.sino.scaffold.controller.base.BaseController;
 import com.sino.scaffold.service.qa.NutzerService;
-import com.sino.scaffold.utils.Result;
+import club.zhcs.common.Result;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

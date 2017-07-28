@@ -11,7 +11,7 @@ import com.sino.scaffold.bean.InstalledRole;
 import com.sino.scaffold.controller.base.BaseController;
 import com.sino.scaffold.ext.shiro.anno.SINORequiresRoles;
 import com.sino.scaffold.service.log.OperationLogService;
-import com.sino.scaffold.utils.Result;
+import club.zhcs.common.Result;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

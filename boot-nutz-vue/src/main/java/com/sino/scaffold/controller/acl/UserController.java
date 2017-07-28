@@ -27,7 +27,7 @@ import com.sino.scaffold.rest.ApiRequest;
 import com.sino.scaffold.service.acl.ShiroUserService;
 import com.sino.scaffold.service.acl.UserService;
 import com.sino.scaffold.utils.DES;
-import com.sino.scaffold.utils.Result;
+import club.zhcs.common.Result;
 
 import club.zhcs.apm.APM;
 import club.zhcs.captcha.CaptchaView;

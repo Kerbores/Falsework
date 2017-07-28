@@ -24,7 +24,8 @@ import com.sino.scaffold.bean.acl.User;
 import com.sino.scaffold.bean.acl.User.Type;
 import com.sino.scaffold.bean.log.LoginLog;
 import com.sino.scaffold.service.log.LoginLogService;
-import com.sino.scaffold.utils.Result;
+
+import club.zhcs.common.Result;
 
 /**
  * 

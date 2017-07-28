@@ -15,7 +15,8 @@ import org.springframework.stereotype.Service;
 import com.sino.scaffold.bean.acl.User;
 import com.sino.scaffold.bean.acl.UserPermission;
 import com.sino.scaffold.bean.acl.UserRole;
-import com.sino.scaffold.utils.Result;
+
+import club.zhcs.common.Result;
 
 /**
  * 

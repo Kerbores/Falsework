@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sino.scaffold.utils.Result;
+import club.zhcs.common.Result;
 
 @RestController
 @ControllerAdvice

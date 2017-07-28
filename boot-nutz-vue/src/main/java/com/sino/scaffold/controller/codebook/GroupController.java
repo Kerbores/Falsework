@@ -17,7 +17,7 @@ import com.sino.scaffold.bean.config.Group;
 import com.sino.scaffold.controller.base.BaseController;
 import com.sino.scaffold.ext.shiro.anno.SINORequiresPermissions;
 import com.sino.scaffold.service.codebook.GroupService;
-import com.sino.scaffold.utils.Result;
+import club.zhcs.common.Result;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

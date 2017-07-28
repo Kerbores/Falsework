@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.sino.scaffold.config.qiniu.QiniuAutoConfiguration.QiniuUploader;
 import com.sino.scaffold.config.qiniu.QiniuAutoConfiguration.R;
-import com.sino.scaffold.utils.Result;
+import club.zhcs.common.Result;
 
 /**
  * @author kerbores

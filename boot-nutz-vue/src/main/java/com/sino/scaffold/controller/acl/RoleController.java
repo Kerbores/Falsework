@@ -16,7 +16,7 @@ import com.sino.scaffold.controller.base.BaseController;
 import com.sino.scaffold.dto.GrantDTO;
 import com.sino.scaffold.ext.shiro.anno.SINORequiresPermissions;
 import com.sino.scaffold.service.acl.RoleService;
-import com.sino.scaffold.utils.Result;
+import club.zhcs.common.Result;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

@@ -1,7 +1,5 @@
 package com.sino.scaffold.controller;
 
-import java.io.IOException;
-
 import org.nutz.log.Log;
 import org.nutz.log.Logs;
 import org.springframework.stereotype.Controller;
@@ -26,8 +24,7 @@ public class IndexController {
 	@GetMapping("/captcha")
 	@ApiOperation("验证码")
 	@APM("验证码")
-	public CaptchaView captcha(@RequestParam(value = "length", required = false, defaultValue = "4") @ApiParam(value = "验证码长度", required = false, defaultValue = "4") int length)
-			throws IOException {
+	public CaptchaView captcha(@RequestParam(value = "length", required = false, defaultValue = "4") @ApiParam(value = "验证码长度", required = false, defaultValue = "4") int length) {
 		return new CaptchaView(length);
 	}
 

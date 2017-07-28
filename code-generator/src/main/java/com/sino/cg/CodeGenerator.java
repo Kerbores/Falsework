@@ -34,8 +34,8 @@ public class CodeGenerator {
 
 		Project project = new Project();
 		project.setDescription("测试一下");
-		project.setGroup("com.sino");
-		project.setHome("/Users/kerbores/git/Sale-Plus/code");
+		project.setGroup("com.sino.sso");
+		project.setHome("/Users/kerbores/git/SSO/sso-server");
 		project.setName("sale");
 		project.setVersion("1.0");
 		DataBase dataBase = new DataBase();
@@ -43,7 +43,7 @@ public class CodeGenerator {
 		dataBase.setDbAddress("127.0.0.1");
 		dataBase.setPassword("123456");
 		dataBase.setPort(3306);
-		dataBase.setSchame("sale-plus");
+		dataBase.setSchame("sso");
 		dataBase.setUser("root");
 		project.setDataBase(dataBase);
 		loadTeamplate();
